@@ -19,7 +19,13 @@ const navigation =[];
 const time = new Date();
 
 const server = express();
-server.use(cors());
+server.use(cors(
+    {
+        origin: '*', // Allow all origins
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
+        allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers        
+        }
+));
 
 function id(id){
     return toString(id);
@@ -29,73 +35,73 @@ server.use(express.json())
 server.use(express.urlencoded({extended:true}));
 //resources
 server.get("/styles/index.css",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "styles/index.css")
 })
 server.get("/js/index.js",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "js/index.js")
 })
 server.get("/styles/signup.css",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "styles/signup.css")
 })
 server.get("/js/signup.js",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "js/signup.js")
 })
 server.get("/js/history.js",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "js/history.js")
 })
 server.get("/js/adminclient.js",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
+let guide = path.join(__dirname,"../frontend/");
 res.sendFile(guide + "js/adminclient.js")
 })
 
 
 
 server.get("/",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "index")
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "index.html")
 })
 //Homepage Admin dashboard
-server.get("/homepage",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "homepage")
+server.get("/homepage.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "homepage.html")
 })
 //SignupPage
-server.get("/signup",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "signup")
+server.get("/signup.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "signup.html")
 })
 //admin signup page
-server.get("/adminsignup",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminsignup")
+server.get("/adminsignup.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "adminsignup.html")
 })
 //User Dashboard
-server.get("/user",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "user")
+server.get("/user.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "user.html")
 })
 //login page
-server.get("/login",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "login")
+server.get("/login.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "login.html")
 })
 //admin login page
-server.get("/adminlogin",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminlogin")
+server.get("/adminlogin.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "adminlogin.html")
 })
-server.get("/adminclient",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminclient")
+server.get("/adminclient.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "adminclient.html")
 })
-server.get("/history",(req,res)=>{
-let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "history")
+server.get("/history.html",(req,res)=>{
+let guide = path.join(__dirname,"../frontend/");
+res.sendFile(guide + "history.html")
 })
 
 
