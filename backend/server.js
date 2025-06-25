@@ -57,45 +57,45 @@ res.sendFile(guide + "js/adminclient.js")
 
 server.get("/",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "index.html")
+res.sendFile(guide + "index")
 })
 //Homepage Admin dashboard
-server.get("/homepage.html",(req,res)=>{
+server.get("/homepage",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "homepage.html")
+res.sendFile(guide + "homepage")
 })
 //SignupPage
-server.get("/signup.html",(req,res)=>{
+server.get("/signup",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "signup.html")
+res.sendFile(guide + "signup")
 })
 //admin signup page
-server.get("/adminsignup.html",(req,res)=>{
+server.get("/adminsignup",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminsignup.html")
+res.sendFile(guide + "adminsignup")
 })
 //User Dashboard
-server.get("/user.html",(req,res)=>{
+server.get("/user",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "user.html")
+res.sendFile(guide + "user")
 })
 //login page
-server.get("/login.html",(req,res)=>{
+server.get("/login",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "login.html")
+res.sendFile(guide + "login")
 })
 //admin login page
-server.get("/adminlogin.html",(req,res)=>{
+server.get("/adminlogin",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminlogin.html")
+res.sendFile(guide + "adminlogin")
 })
-server.get("/adminclient.html",(req,res)=>{
+server.get("/adminclient",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "adminclient.html")
+res.sendFile(guide + "adminclient")
 })
-server.get("/history.html",(req,res)=>{
+server.get("/history",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "history.html")
+res.sendFile(guide + "history")
 })
 
 
