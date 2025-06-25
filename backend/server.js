@@ -12,6 +12,7 @@ const db = [];//stores users
 const userdb=[];//stores user specific data
 const userpost=[];//stores user specific posts
 const activity=[];//app history
+const feedback=[]; //to take user feedback
 //
 //Queue
 const navigation =[];
@@ -75,10 +76,7 @@ server.use(express.urlencoded({extended:true}));
                 "message":`User at index: ${db[x]} is Updated Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-     res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/homepage.html"
-    });      
+    res.redirect("https://snappod.netlify.app/homepage.html")      
     })
     //delete (remove the data)/api/data/id
     server.post("/api/data/users/delete",(req,res)=>{
@@ -93,10 +91,7 @@ server.use(express.urlencoded({extended:true}));
                 "message":`User at index: ${id[id]} is Deleted Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-         res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/homepage.html"
-    });
+        res.redirect("https://snappod.netlify.app/homepage.html")
     })
 
     //login
@@ -111,20 +106,14 @@ server.use(express.urlencoded({extended:true}));
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
                     console.log(db)
-                    res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/user.html"
-    });//userdashboard
+                   res.redirect("https://snappod.netlify.app/user.html")//userdashboard
                 }else{
              console.log(`User ${req.body.mail} login attempt invalid!`)
                       activity.push({
                 "message":`User ${req.body.mail} login attempt invalid!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                 res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/login.html"
-    });
+                 res.redirect("https://snappod.netlify.app/login.html")
         }
             }
         }else{
@@ -133,10 +122,7 @@ server.use(express.urlencoded({extended:true}));
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                 res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/signup.html"
-    });
+                res.redirect("https://snappod.netlify.app/signup.html")
         }
     })
     //get user id
@@ -169,10 +155,7 @@ server.use(express.urlencoded({extended:true}));
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
             console.log(`User ${req.body.name} invalid Admin Signup attempt!!`)
-            return  res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/adminsignup.html"
-    });
+            return  res.redirect("https://snappod.netlify.app/adminsignup.html")
         }
         else{
             admin.push(adminData)
@@ -182,10 +165,7 @@ server.use(express.urlencoded({extended:true}));
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
             console.log(admin)
-             res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/homepage.html"
-    });
+            res.redirect("https://snappod.netlify.app/homepage.html");
         }
     })
 //adds a new user to the db array and assigns an id
@@ -203,10 +183,7 @@ server.use(express.urlencoded({extended:true}));
                 "message":`User ${userdata.userData.name} at index: ${userdata.id} by Admin Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-         res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/homepage.html"
-    });
+        res.redirect("https://snappod.netlify.app/homepage.html")
     }
 ); 
 //login admin
@@ -221,20 +198,16 @@ server.post("/api/login/admin",(req,res)=>{
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
                 console.log(admin)
-                     res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/homepage.html"
-    });//admin dashboard
+                res.redirect("https://snappod.netlify.app/homepage.html")   
+                //admin dashboard
                 }else{
                     console.log(`User Doesnt exist!`)
                       activity.push({
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                 res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/adminlogin.html"
-    });
+                res.redirect("https://snappod.netlify.app/adminlogin.html")
+                ;
                 }
  
             }
@@ -244,10 +217,8 @@ server.post("/api/login/admin",(req,res)=>{
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                 res.json({ 
-        success: true,
-        redirectUrl: "https://snappod.netlify.app/adminsignup.html"
-    });
+                res.redirect("https://snappod.netlify.app/adminsignup.html")
+                ;
         }
     })
 
@@ -259,6 +230,30 @@ server.post("/api/login/admin",(req,res)=>{
     server.get("/api/data/admin",(req,res)=>{
         res.send(admin)
         console.log(admin)
+    });
+    server.get("/api/data/feedback",(req,res)=>{
+        res.send(feedback)
+        console.log(feedback)
+    });
+    server.post("/api/data/feedback",(req,res)=>{
+        function findUser() {
+            for (let i = 0; i < db.length; i++) {
+                if (db[i].userData.mail==req.body.mail) {
+                    const userId = db[i].id;
+                    return userId
+                }
+                
+            }
+        
+        }
+        const feedbackdata = {
+            "user":req.body.mail,
+            "feedback":req.body.content,
+            "userLocation":req.url,
+            "id":findUser()
+        }
+        feedback.push(feedbackdata)
+        res.redirect()
     });
 
 server.listen(PORT,()=>console.log("🔥 Server is Running! : http://localhost:"+PORT))
