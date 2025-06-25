@@ -1,4 +1,4 @@
-fetch("http://localhost:5000/api/data/admin")
+fetch("https://simple-crud-application-0w9e.onrender.com/api/data/admin")
 .then(res => res.json())
 .then(data =>{
     const tbody= document.querySelector("#userTable tbody");

@@ -7,7 +7,7 @@ const clear = document.getElementById("close");
 const confirmform =document.getElementById("deleteModal")
 const now = new Date();
 
-fetch("http://localhost:5000/api/data/users")
+fetch("https://simple-crud-application-0w9e.onrender.com/api/data/users")
 .then(res => res.json())
 .then(data =>{
     const tbody= document.querySelector("#userTable tbody");
