@@ -1,4 +1,4 @@
-fetch('https://simple-crud-application-0w9e.onrender.com/api/signup/data', {
+fetch('https://simple-crud-application-0w9e.onrender.com/api/data/history', {
     method: 'GET'
 })
 .then(res => res.json())
