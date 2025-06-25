@@ -1,0 +1,169 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: rgb(204, 222, 238);
+    box-sizing: border-box;
+    max-width: 100dvw;
+}
+table{
+    text-align: center;
+    width:100%;
+    overflow-y: scroll;
+    max-height: 80dvh;
+    border: 1px solid none;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+td{
+    overflow-y: scroll;
+    overflow-x: scroll;
+    scrollbar-width:none;
+    justify-content: space-around;
+    box-sizing: border-box;
+    height: 1rem;
+}
+td button{
+      width: 80px;
+    padding:0.5em;
+    border-radius: 5px;
+    border: none;
+    opacity: 0.7;
+    background-color: green;
+    
+}
+td button:hover{
+    opacity: 1;
+    transform:scale(1.1);
+    transition: ease-in-out 0.3s;
+    cursor: pointer;
+}
+td button:nth-child(2){
+    background-color: red;
+    margin-left: 1rem;
+}
+#display{
+    box-sizing: border-box;
+    max-height: 85dvh;
+    width: 100dvw;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+fieldset{
+    display: grid;
+    gap: 1em;
+    padding: 1.5em;
+    border-radius: 5px;
+    background:radial-gradient(ellipse,rgb(212, 210, 210),rgba(192, 192, 192, 0.788),rgb(138, 137, 137));
+}
+input{
+    height: 2em;
+}
+.addUser{
+position: absolute;
+
+left: -100dvi;
+top: 14dvh;
+min-width: 50dvw;
+
+transition: ease-in-out left 0.3s;
+}
+
+.addUser.active{
+ position: absolute;
+left: 22dvw;
+top: 14dvh;
+min-width: 50dvw;  
+transition: ease-in-out left 0.3s; 
+
+}
+.UpdateUser{
+position: absolute;
+
+left: -100dvi;
+top: 14dvh;
+min-width: 50dvw;
+
+transition: ease-in-out left 0.3s;
+}
+
+.UpdateUser.active{
+ position: absolute;
+left: 22dvw;
+top: 14dvh;
+min-width: 50dvw;  
+transition: ease-in-out left 0.3s; 
+
+}
+#toggle{
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.5em;
+    border: 0.5px solid;
+    width: max-content;
+    margin-bottom: 0.5em;
+    justify-self: center;
+    position: fixed;
+    bottom: 15px;
+    left: 47%;
+    transform: scale(2);
+}
+
+#confirmform{
+    border: 1px solid;
+    text-align: center;
+    width: 20rem;
+    align-items: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    position: absolute;
+    border-radius: 15px;
+    padding: 1em;
+    justify-self: center;
+    align-self: center;
+    top: 30%;
+    left: 35%;
+    z-index: 40;
+    display: none;
+}
+
+#confirmform input{
+    max-width: fit-content;
+    width: 10px;
+    border: none;
+  background-color: transparent;
+    color: red;
+}
+#confirmform button{
+    width: 80px;
+    padding:0.5em;
+    border-radius: 5px;
+    border: none;
+    opacity: 0.7;
+    background-color: red;
+}
+#confirmform button:hover{
+    opacity: 1;
+    transform:scale(1.1);
+    transition: ease-in-out 0.3s;
+    cursor: pointer;
+}
+
+#confirmform button:last-child{
+    background-color: green;
+}
+
+#menu{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 15px;
+    gap: 0.8em;
+    font-size: large;
+}
+#menu a{
+    color: white;
+}
+#menu a:hover{
+    transform: scale(1.2) translateY(-4px);
+    transition: ease-in-out 0.5s;
+}

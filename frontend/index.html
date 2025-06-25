@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Snap Pod</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --danger: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .user-table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .data-table button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        #update {
+            background: var(--primary);
+            color: white;
+        }
+
+        #delete {
+            background: var(--danger);
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .data-table button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        fieldset {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        legend {
+            padding: 0 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.75rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Application Users</h2>
+    </header>
+    
+    <div class="container">
+        <div class="user-table-container">
+            <table class="data-table" id="userTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>AGE</th>
+                        <th>EMAIL</th>
+                        <th>PASSWORD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-container">
+                <form action="http://localhost:5000/api/signup/data/admin" method="post">
+                    <fieldset>
+                        <legend>Register New User</legend>
+                        <div class="form-group">
+                            <label for="Username">Username</label>
+                            <input type="text" id="Username" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Userage">Age</label>
+                            <input type="number" id="Userage" name="age" min="13" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="Usermail">Email</label>
+                            <input type="email" id="Usermail" name="mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Userpass">Password</label>
+                            <input type="password" id="Userpass" name="password" required minlength="8">
+                        </div>
+                        <button type="submit" class="submit-btn">Register User</button>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="form-container">
+                <form action="http://localhost:5000/api/data/users/update/" method="post">
+                    <fieldset id="updateList">
+                        <legend>Update User</legend>
+                        <div class="form-group">
+                            <label for="Updatename">Username</label>
+                            <input type="text" id="Updatename" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updateage">Age</label>
+                            <input type="number" id="Updateage" name="age" min="13" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updatemail">Email</label>
+                            <input type="email" id="Updatemail" name="mail">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updatepass">Password</label>
+                            <input type="password" id="Updatepass" name="password" minlength="8">
+                        </div>
+                        <button type="submit" class="submit-btn">Update User</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Confirm Delete Action</h3>
+            <p>Deleted users cannot be retrieved. Are you sure?</p>
+            <form action="http://localhost:5000/api/data/users/delete" method="post" id="confirmform">
+                <div class="form-group">
+                    <label for="confirm">User ID:</label>
+                    <input type="text" name="id" id="confirm" readonly>
+                </div>
+                <div class="modal-btns">
+                    <button type="submit" class="submit-btn delete-btn">Confirm Delete</button>
+                    <button type="button" id="close" class="submit-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="nav-menu">
+        <a href="adminclient.html" title="Admin Management">🛠️</a>
+        <a href="history.html" title="App History">📜</a>
+        <a href="/" title="Logout">🚪</a>
+    </div>
+
+    <script src="./js/index.js"></script>
+</body>
+</html>
