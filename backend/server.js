@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path")
 const dotenv= require("dotenv");
 const cors = require('cors');
-server.use(cors());
+
 dotenv.config()
 
 const PORT = process.env.PORT;
@@ -19,6 +19,7 @@ const navigation =[];
 const time = new Date();
 
 const server = express();
+server.use(cors());
 
 function id(id){
     return toString(id);
