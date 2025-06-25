@@ -184,7 +184,7 @@ server.use(express.urlencoded({extended:true}));
             console.log(admin)
              res.json({ 
         success: true,
-        redirectUrl: "https://snappod.netlify.app/index.html"
+        redirectUrl: "https://snappod.netlify.app/homepage.html"
     });
         }
     })
