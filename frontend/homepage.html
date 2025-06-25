@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snap Pod | Home</title>
+    <title>Admin Dashboard | Snap Pod</title>
     <style>
         :root {
             --primary: #4361ee;
             --primary-dark: #3a0ca3;
-            --admin: #7209b7;
-            --admin-dark: #560bad;
+            --danger: #f72585;
+            --success: #4cc9f0;
             --light: #f8f9fa;
             --dark: #212529;
             --gray: #6c757d;
-            --border-radius: 12px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --border-radius: 8px;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -26,150 +25,201 @@
         }
 
         body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             background-color: #f5f7ff;
             color: var(--dark);
-            transition: var(--transition);
-        }
-
-        body.dark {
-            background-color: #0a0a1a;
-            color: #f5f5f5;
+            min-height: 100vh;
         }
 
         header {
-            width: 90%;
-            max-width: 1200px;
-            height: 80px;
+            background: white;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .user-table-container {
             background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin: 1rem 0;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        body.dark header {
-            background: rgba(30, 30, 30, 0.9);
-            color: #f5f5f5;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        body.dark .logo {
-            color: #7b2cbf;
-        }
-
-        .nav-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        main {
-            width: 90%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 0;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem;
-            color: var(--primary);
-            align-self: flex-start;
-        }
-
-        body.dark .section-title {
-            color: #7b2cbf;
-        }
-
-        .auth-links {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .auth-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 60px;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 500;
-            text-decoration: none;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
         }
 
-        .auth-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .auth-link::before {
-            content: '';
-            position: absolute;
+        .data-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .data-table button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        #update {
+            background: var(--primary);
+            color: white;
+        }
+
+        #delete {
+            background: var(--danger);
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .data-table button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        fieldset {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        legend {
+            padding: 0 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .auth-link:hover::before {
-            left: 100%;
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 400px;
+            width: 90%;
         }
 
-        .user-link {
-            background: var(--primary);
+        .modal-btns {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
-        .user-link:hover {
-            background: var(--primary-dark);
+        .nav-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.75rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
         }
 
-        .admin-link {
-            background: var(--admin);
-        }
-
-        .admin-link:hover {
-            background: var(--admin-dark);
-        }
-
-        .home-link {
-            display: inline-flex;
+        .nav-menu a {
+            display: flex;
             align-items: center;
             justify-content: center;
             width: 40px;
@@ -178,77 +228,130 @@
             background: var(--primary);
             color: white;
             text-decoration: none;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
-        .home-link:hover {
+        .nav-menu a:hover {
             background: var(--primary-dark);
-            transform: scale(1.1);
+            transform: translateY(-3px);
         }
 
-        body.dark .home-link {
-            background: #7b2cbf;
-        }
-
-        body.dark .home-link:hover {
-            background: #5a189a;
-        }
-
-        @media (max-width: 600px) {
-            header {
-                padding: 0 1rem;
+        @media (max-width: 768px) {
+            .data-table {
+                display: block;
+                overflow-x: auto;
             }
             
-            .auth-links {
+            .form-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                bottom: 1rem;
+                right: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <a href="/" class="logo">Snap Pod</a>
-        <div class="nav-controls">
-            <a href="https://simple-crud-application-0w9e.onrender.com/" class="home-link">🏡</a>
-            <button class="theme-toggle" id="themeToggle">🌑</button>
-        </div>
+        <h2>Application Users</h2>
     </header>
-   
-    <main>
-        <h2 class="section-title">User Portal</h2>
-        <div class="auth-links">
-            <a href="https://simple-crud-application-0w9e.onrender.com/signup.html" class="auth-link user-link">Sign Up</a>
-            <a href="https://simple-crud-application-0w9e.onrender.com/login.html" class="auth-link user-link">Log In</a>
+    
+    <div class="container">
+        <div class="user-table-container">
+            <table class="data-table" id="userTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>AGE</th>
+                        <th>EMAIL</th>
+                        <th>PASSWORD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
         </div>
 
-        <h2 class="section-title">Administrator Portal</h2>
-        <div class="auth-links">
-            <a href="https://simple-crud-application-0w9e.onrender.com/adminsignup.html" class="auth-link admin-link">Admin Sign Up</a>
-            <a href="https://simple-crud-application-0w9e.onrender.com/adminlogin.html" class="auth-link admin-link">Admin Log In</a>
+        <div class="form-grid">
+            <div class="form-container">
+                <form action="https://simple-crud-application-0w9e.onrender.com/api/signup/data/admin" method="post">
+                    <fieldset>
+                        <legend>Register New User</legend>
+                        <div class="form-group">
+                            <label for="Username">Username</label>
+                            <input type="text" id="Username" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Userage">Age</label>
+                            <input type="number" id="Userage" name="age" min="13" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="Usermail">Email</label>
+                            <input type="email" id="Usermail" name="mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Userpass">Password</label>
+                            <input type="password" id="Userpass" name="password" required minlength="8">
+                        </div>
+                        <button type="submit" class="submit-btn">Register User</button>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="form-container">
+                <form action="https://simple-crud-application-0w9e.onrender.com/api/data/users/update/" method="post">
+                    <fieldset id="updateList">
+                        <legend>Update User</legend>
+                        <div class="form-group">
+                            <label for="Updatename">Username</label>
+                            <input type="text" id="Updatename" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updateage">Age</label>
+                            <input type="number" id="Updateage" name="age" min="13" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updatemail">Email</label>
+                            <input type="email" id="Updatemail" name="mail">
+                        </div>
+                        <div class="form-group">
+                            <label for="Updatepass">Password</label>
+                            <input type="password" id="Updatepass" name="password" minlength="8">
+                        </div>
+                        <button type="submit" class="submit-btn">Update User</button>
+                    </fieldset>
+                </form>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        
-        // Check for saved theme preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark');
-            themeToggle.textContent = '🌞';
-        }
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Confirm Delete Action</h3>
+            <p>Deleted users cannot be retrieved. Are you sure?</p>
+            <form action="https://simple-crud-application-0w9e.onrender.com/api/data/users/delete" method="post" id="confirmform">
+                <div class="form-group">
+                    <label for="confirm">User ID:</label>
+                    <input type="text" name="id" id="confirm" readonly>
+                </div>
+                <div class="modal-btns">
+                    <button type="submit" class="submit-btn delete-btn">Confirm Delete</button>
+                    <button type="button" id="close" class="submit-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Toggle theme
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            
-            // Save preference
-            const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('darkMode', isDark);
-            
-            // Update icon
-            themeToggle.textContent = isDark ? '🌞' : '🌑';
-        });
-    </script>
+    <div class="nav-menu">
+        <a href="adminclient.html" title="Admin Management">🛠️</a>
+        <a href="history.html" title="App History">📜</a>
+        <a href="/" title="Logout">🚪</a>
+    </div>
+
+    <script src="./js/index.js"></script>
 </body>
 </html>

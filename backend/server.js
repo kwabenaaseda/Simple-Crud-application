@@ -57,12 +57,12 @@ res.sendFile(guide + "js/adminclient.js")
 
 server.get("/",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "homepage.html")
+res.sendFile(guide + "index.html")
 })
 //Homepage Admin dashboard
-server.get("/index.html",(req,res)=>{
+server.get("/homepage.html",(req,res)=>{
 let guide = path.join(process.cwd(),"../frontend/");
-res.sendFile(guide + "index.html")
+res.sendFile(guide + "homepage.html")
 })
 //SignupPage
 server.get("/signup.html",(req,res)=>{
