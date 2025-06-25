@@ -7,7 +7,9 @@ const clear = document.getElementById("close");
 const confirmform =document.getElementById("deleteModal")
 const now = new Date();
 
-fetch("https://simple-crud-application-0w9e.onrender.com/api/data/users")
+fetch('https://simple-crud-application-0w9e.onrender.com/api/data/users', {
+    method: 'GET'
+})
 .then(res => res.json())
 .then(data =>{
     const tbody= document.querySelector("#userTable tbody");
@@ -34,46 +36,47 @@ console.log()
 
 
 
-function Delete(btn){
-    document.getElementById("deleteModal").style.display="block"
-    const parent =btn.parentElement.closest("tr");
+// Update the Delete function
+function Delete(btn) {
+    document.getElementById("deleteModal").style.display = "block";
+    const parent = btn.parentElement.closest("tr");
     const id = parent.children[0].textContent;
-    document.querySelector("#confirm").value=id;
-clear.addEventListener("click",()=>{
-    confirmform.style.display="none";
-})
+    document.querySelector("#confirm").value = id;
     
+    clear.addEventListener("click", () => {
+        confirmform.style.display = "none";
+    });
 }
 
-
-
-function Update(btn){
-const parent =btn.parentElement.closest("tr");
+// Update the Update function
+function Update(btn) {
+    const parent = btn.parentElement.closest("tr");
     const id = parent.children[0].textContent;
     const data = {
-        "id":id,
-        "userData":{
-            "name":parent.children[1].textContent,
-            "age":parent.children[2].textContent,
-            "mail":parent.children[3].textContent,
-            "password":parent.children[4].textContent
+        "id": id,
+        "userData": {
+            "name": parent.children[1].textContent,
+            "age": parent.children[2].textContent,
+            "mail": parent.children[3].textContent,
+            "password": parent.children[4].textContent
         }
+    };
+    
+    document.querySelector("#Updatename").value = data.userData.name;
+    document.querySelector("#Updateage").value = data.userData.age;
+    document.querySelector("#Updatemail").value = data.userData.mail;
+    document.querySelector("#Updatepass").value = data.userData.password;
+    
+    // Add hidden input for ID
+    let idInput = document.querySelector('input[name="id"]');
+    if (!idInput) {
+        idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        document.querySelector('form[action="/api/data/users/update/"]').appendChild(idInput);
     }
-      const init = document.createElement("input")
-      init.style.display="none"
-    init.value=data.id;
-    init.name="id"
-    updatelist.appendChild(init)
-    document.querySelector("#Updatename").value=data.userData.name;
-    document.querySelector("#Updateage").value=data.userData.age;
-    document.querySelector("#Updatemail").value=data.userData.mail;
-    document.querySelector("#Updatepass").value=data.userData.password;
-
-  
-console.log(data)
-     document.querySelector(".UpdateUser").classList.toggle("active")
+    idInput.value = id;
 }
-
 const show = document.getElementById("show")
 show.addEventListener("click",()=>{
     console.log(show.parentElement)

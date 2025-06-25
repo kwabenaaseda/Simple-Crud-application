@@ -227,7 +227,7 @@
             <p>Already have an account? <a href="login.html">Log in</a></p>
         </div>
     </div>
-
+    
     <script>
         // Password validation
         document.getElementById("Userpass").addEventListener("input", (e) => {
@@ -263,5 +263,11 @@
             }, 2000);
         }
     </script>
+    <script src="/js/api.js"></script>
+<script>
+document.querySelector('.auth-form').addEventListener('submit', (e) => {
+    handleFormSubmit(e, '/api/signup/data');
+});
+</script>
 </body>
 </html>

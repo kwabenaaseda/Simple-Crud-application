@@ -19,13 +19,12 @@ const navigation =[];
 const time = new Date();
 
 const server = express();
-server.use(cors(
-    {
-        origin: '*', // Allow all origins
-        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
-        allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers        
-        }
-));
+server.use(cors({
+    origin: 'https://snappod.netlify.app', // Only allow your frontend domain
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    
+}));
 
 function id(id){
     return toString(id);
@@ -33,76 +32,6 @@ function id(id){
 
 server.use(express.json())
 server.use(express.urlencoded({extended:true}));
-//resources
-server.get("/styles/index.css",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "styles/index.css")
-})
-server.get("/js/index.js",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "js/index.js")
-})
-server.get("/styles/signup.css",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "styles/signup.css")
-})
-server.get("/js/signup.js",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "js/signup.js")
-})
-server.get("/js/history.js",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "js/history.js")
-})
-server.get("/js/adminclient.js",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "js/adminclient.js")
-})
-
-
-
-server.get("/",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "index.html")
-})
-//Homepage Admin dashboard
-server.get("/homepage.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "homepage.html")
-})
-//SignupPage
-server.get("/signup.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "signup.html")
-})
-//admin signup page
-server.get("/adminsignup.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "adminsignup.html")
-})
-//User Dashboard
-server.get("/user.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "user.html")
-})
-//login page
-server.get("/login.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "login.html")
-})
-//admin login page
-server.get("/adminlogin.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "adminlogin.html")
-})
-server.get("/adminclient.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "adminclient.html")
-})
-server.get("/history.html",(req,res)=>{
-let guide = path.join(__dirname,"../frontend/");
-res.sendFile(guide + "history.html")
-})
 
 
 //Requests
@@ -122,7 +51,11 @@ res.sendFile(guide + "history.html")
                 "message":`User ${userdata.userData.name} at index: ${userdata.id} is added Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-        res.redirect("/user.html")
+         res.json({ 
+        success: true,
+        message: "User added successfully",
+        redirectUrl: "https://snappod.netlify.app/user.html" 
+    });
         
     }
 ); //adds a new user to the db array and assigns an id
@@ -142,7 +75,10 @@ res.sendFile(guide + "history.html")
                 "message":`User at index: ${db[x]} is Updated Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-    res.redirect("/index.html")        
+     res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/homepage.html"
+    });      
     })
     //delete (remove the data)/api/data/id
     server.post("/api/data/users/delete",(req,res)=>{
@@ -157,7 +93,10 @@ res.sendFile(guide + "history.html")
                 "message":`User at index: ${id[id]} is Deleted Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-        res.redirect("/index.html")
+         res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/homepage.html"
+    });
     })
 
     //login
@@ -172,14 +111,20 @@ res.sendFile(guide + "history.html")
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
                     console.log(db)
-                    res.redirect("/user.html")//userdashboard
+                    res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/user.html"
+    });//userdashboard
                 }else{
              console.log(`User ${req.body.mail} login attempt invalid!`)
                       activity.push({
                 "message":`User ${req.body.mail} login attempt invalid!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                res.redirect("/login.html")
+                 res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/login.html"
+    });
         }
             }
         }else{
@@ -188,7 +133,10 @@ res.sendFile(guide + "history.html")
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                res.redirect("/signup.html")
+                 res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/signup.html"
+    });
         }
     })
     //get user id
@@ -221,7 +169,10 @@ res.sendFile(guide + "history.html")
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
             console.log(`User ${req.body.name} invalid Admin Signup attempt!!`)
-            return res.redirect("/adminsignup.html")
+            return  res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/adminsignup.html"
+    });
         }
         else{
             admin.push(adminData)
@@ -231,7 +182,10 @@ res.sendFile(guide + "history.html")
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
             console.log(admin)
-            res.redirect("/index.html")
+             res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/index.html"
+    });
         }
     })
 //adds a new user to the db array and assigns an id
@@ -249,8 +203,10 @@ res.sendFile(guide + "history.html")
                 "message":`User ${userdata.userData.name} at index: ${userdata.id} by Admin Successfully!!`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-        res.redirect("/index.html")
-        
+         res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/homepage.html"
+    });
     }
 ); 
 //login admin
@@ -265,14 +221,20 @@ server.post("/api/login/admin",(req,res)=>{
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
                 console.log(admin)
-                    res.redirect("/index.html")//admin dashboard
+                     res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/homepage.html"
+    });//admin dashboard
                 }else{
                     console.log(`User Doesnt exist!`)
                       activity.push({
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                res.redirect("/adminlogin.html")
+                 res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/adminlogin.html"
+    });
                 }
  
             }
@@ -282,7 +244,10 @@ server.post("/api/login/admin",(req,res)=>{
                 "message":`User doesnt exist`,
                 "timestamp":`${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`
             })
-                res.redirect("/adminsignup.html")
+                 res.json({ 
+        success: true,
+        redirectUrl: "https://snappod.netlify.app/adminsignup.html"
+    });
         }
     })
 

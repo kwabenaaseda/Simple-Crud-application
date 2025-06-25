@@ -255,5 +255,11 @@
             }, 2000);
         }
     </script>
+    <script src="/js/api.js"></script>
+<script>
+document.querySelector('.auth-form').addEventListener('submit', (e) => {
+    handleFormSubmit(e, '/api/signup/data/login');
+});
+</script>
 </body>
 </html>

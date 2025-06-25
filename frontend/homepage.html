@@ -353,5 +353,22 @@
     </div>
 
     <script src="./js/index.js"></script>
+    <script src="/js/api.js"></script>
+<script>
+// For register user form
+document.querySelector('form[action="/api/signup/data/admin"]').addEventListener('submit', (e) => {
+    handleFormSubmit(e, '/api/signup/data/admin');
+});
+
+// For update user form
+document.querySelector('form[action="/api/data/users/update/"]').addEventListener('submit', (e) => {
+    handleFormSubmit(e, '/api/data/users/update/');
+});
+
+// For delete confirmation form
+document.querySelector('form[action="/api/data/users/delete"]').addEventListener('submit', (e) => {
+    handleFormSubmit(e, '/api/data/users/delete');
+});
+</script>
 </body>
 </html>
