@@ -63,7 +63,7 @@ const getTimeStamp = () => {
 //Route Requests
 
 //Post (Sign up data) /api/signup/data
-server.post("/api/signup/data",protect, async (req, res) => {
+server.post("/api/signup/data", async (req, res) => {
   try {
     /* const user = await User.create(req.body); */
     const {name , mail, password} = req.body;
@@ -311,7 +311,7 @@ server.post("/api/signup/data/admin", (req, res) => {
   res.redirect("https://snappod.netlify.app/homepage.html");
 });
 //login admin
-server.post("/api/login/admin", (req, res) => {
+server.post("/api/login/admin",protect, (req, res) => {
   if (admin.length > 0) {
     for (let i = 0; i < admin.length; i++) {
       if (
