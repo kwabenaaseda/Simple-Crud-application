@@ -1,6 +1,8 @@
 // utils/auth.js
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const Admin = require('../models/admin');
+const User = require('../models/User');
 
 dotenv.config();
 

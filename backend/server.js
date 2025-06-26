@@ -97,7 +97,7 @@ server.post("/api/signup/data", async (req, res) => {
 }); //adds a new user to the db array and assigns an id
 
 //put (update the data) /api/data/id
-server.post("/api/data/users/update/", async (req, res) => {
+server.post("/api/data/users/update/",protect, async (req, res) => {
   try {
     const { id, ...updateData } = req.body;
     const user = await User.findByIdAndUpdate(id, updateData, { new: true });
@@ -128,7 +128,7 @@ server.post("/api/data/users/update/", async (req, res) => {
     console.error("Error updating user:", error);
     res.apiError(`Error updating user`,500);}
 });
-server.post("/api/data/users/update/admin", async (req, res) => {
+server.post("/api/data/users/update/admin",protect, async (req, res) => {
   try {
     const { id, ...updateData } = req.body;
     const user = await User.findByIdAndUpdate(id, updateData, { new: true });
@@ -161,7 +161,7 @@ server.post("/api/data/users/update/admin", async (req, res) => {
   
 });
 //delete (remove the data)/api/data/id
-server.post("/api/data/users/delete", async (req, res) => {
+server.post("/api/data/users/delete",protect, async (req, res) => {
   try {
     const { id } = req.body;
     await User.findByIdAndDelete(id)
@@ -185,7 +185,7 @@ server.post("/api/data/users/delete", async (req, res) => {
     res.apiError("Error deleting user", 500); 
   }
 });
-server.post("/api/data/users/delete/admin", async (req, res) => {
+server.post("/api/data/users/delete/admin",protect, async (req, res) => {
   try {
     const { id } = req.body;
     await User.findByIdAndDelete(id)
@@ -211,7 +211,7 @@ server.post("/api/data/users/delete/admin", async (req, res) => {
 });
 
 //User login
-server.post("/api/signup/data/login",protect, async (req, res) => {
+server.post("/api/signup/data/login", async (req, res) => {
   try {
     const { mail, password } = req.body;
     const user = await User.findOne({ mail, password });
@@ -257,7 +257,7 @@ server.get("/api/data/users",protect, async (req, res) => {
 //An interface for the admin to see all users
 
 //adds a new admin
-server.post("/api/signup/admin",protect, async (req, res) => {
+server.post("/api/signup/admin", async (req, res) => {
    try {
     /* const user = await User.create(req.body); */
     const {name:username , mail:email, password} = req.body;
@@ -294,7 +294,7 @@ server.post("/api/signup/admin",protect, async (req, res) => {
   }
 });
 //adds a new user to the db array and assigns an id
-server.post("/api/signup/data/admin",protect, (req, res) => {
+server.post("/api/signup/data/admin", (req, res) => {
   const userdata = {
     id: db.length > 0 ? `${db.length}` : "0",
     userData: req.body,
@@ -311,7 +311,7 @@ server.post("/api/signup/data/admin",protect, (req, res) => {
   res.redirect("https://snappod.netlify.app/homepage.html");
 });
 //login admin
-server.post("/api/login/admin",protect, (req, res) => {
+server.post("/api/login/admin", (req, res) => {
   if (admin.length > 0) {
     for (let i = 0; i < admin.length; i++) {
       if (
@@ -360,7 +360,7 @@ server.get("/api/data/history",protect, async(req, res) => {
     res.apiError("Error retrieving history", 500);
   }
 });
-server.get("/api/data/admin",protect, async (req, res) => {
+server.get("/api/data/admin", async (req, res) => {
   try{
     const user = await Admin.find();
     res.apiSuccess(user, "User retrieved successfully");
@@ -369,7 +369,7 @@ server.get("/api/data/admin",protect, async (req, res) => {
     res.apiError("Error retrieving User", 500);
   }
 });
-server.get("/api/data/feedback",protect, async(req, res) => {
+server.get("/api/data/feedback", async(req, res) => {
   try{
     const Feedback = await Feedback.find();
     res.apiSuccess(Feedback, "Feedback retrieved successfully");
