@@ -154,6 +154,22 @@
             cursor: pointer;
             z-index: 10;
         }
+        .home {
+            position: fixed;
+            top: 4.6rem;
+            right: 1rem;
+            background: white;
+            border: none;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 10;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -193,6 +209,7 @@
 </head>
 <body>
     <button class="theme-toggle" id="themeToggle">🌙</button>
+    <button class="home"><a href="./portal" title="Home">🏡</a></button>
 
     <div class="auth-container">
         <div class="auth-header">

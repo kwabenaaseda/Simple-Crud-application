@@ -154,6 +154,22 @@
             cursor: pointer;
             z-index: 10;
         }
+        .home {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            border: none;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 10;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -189,10 +205,42 @@
         body.dark-mode .auth-footer {
             color: #aaa;
         }
+/* Add to your existing CSS */
+.popup-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.popup-error {
+    background: #F44336;
+    color: white;
+}
+
+.popup-info {
+    background: #2196F3;
+    color: white;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
+
+.close-btn {
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
     </style>
 </head>
 <body>
     <button class="theme-toggle" id="themeToggle">🌙</button>
+    <button class="home"><a href="./portal" title="Home">🏡</a></button>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -200,7 +248,7 @@
             <p>Restricted access</p>
         </div>
 
-         <form class="auth-form" action="https://simple-crud-application-0w9e.onrender.com/api/signup/admin" method="post">
+         <form class="auth-form">
             <div class="form-group">
                 <label for="Username">Username</label>
                 <input type="text" id="Username" name="name" class="form-control" placeholder="Enter your name" required>
@@ -262,7 +310,7 @@
     </script>
     <script src="/js/api.js"></script>
 <script>
-document.querySelector('.auth-form').addEventListener('submit', (e) => {
+document.querySelector('.auth-form').addEventListener('submit',  (e) => {
     handleFormSubmit(e, '/api/signup/admin');
 });
 </script>
