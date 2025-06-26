@@ -1,5 +1,7 @@
 fetch('https://simple-crud-application-0w9e.onrender.com/api/data/admin', {
     method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'}
 })
 .then(res => res.json())
 .then(data =>{
