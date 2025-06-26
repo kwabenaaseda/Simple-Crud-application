@@ -357,17 +357,17 @@
 <script>
 // For register user form
 document.querySelector('.auth-form-send').addEventListener('submit', (e) => {
-    handleFormSubmit(e, '/api/signup/data/admin');
+    handleFormSubmit(e, '/api/signup/data');
 });
 
 // For update user form
 document.querySelector('.auth-form-update"]').addEventListener('submit', (e) => {
-    handleFormSubmit(e, '/api/data/users/update/');
+    handleFormSubmit(e, '/api/data/users/update/admin');
 });
 
 // For delete confirmation form
 document.querySelector('.auth-form-delete"]').addEventListener('submit', (e) => {
-    handleFormSubmit(e, '/api/data/users/delete');
+    handleFormSubmit(e, '/api/data/users/delete/admin');
 });
 </script>
 </body>

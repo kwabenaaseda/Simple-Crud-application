@@ -258,7 +258,7 @@ server.post("/api/signup/data/login", async (req, res) => {
 
 // Administator Endpoints
 //Admin - Get (Get the Data) /api/data
-server.get("/api/data/users",protect, async (req, res) => {
+server.get("/api/data/users", async (req, res) => {
   try{
     const users = await User.find();
     res.apiSuccess(users, "Users retrieved successfully");
@@ -271,7 +271,7 @@ server.get("/api/data/users",protect, async (req, res) => {
 
 
 //application history
-server.get("/api/data/history",protect, async(req, res) => {
+server.get("/api/data/history", async(req, res) => {
   try{
     const history = await Activity.find();
     res.apiSuccess(history, "History retrieved successfully");
