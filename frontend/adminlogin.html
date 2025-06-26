@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Task Manager</title>
     <style>
-        /* [Same CSS as signup.html - can be moved to external CSS file] */
         :root {
             --primary: #7209b7;
             --primary-dark: #560bad;
@@ -273,8 +272,37 @@
     </script>
     <script src="/js/api.js"></script>
 <script>
-document.querySelector('.auth-form').addEventListener('submit', (e) => {
-    handleFormSubmit(e, '/api/login/admin');
+document.querySelector('.auth-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    email: document.getElementById('mail').value,
+    password: document.getElementById('password').value
+  };
+
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      // Store the token
+      localStorage.setItem('adminToken', data.token);
+      // Redirect to admin dashboard
+      window.location.href = data.redirectUrl || '/admin/dashboard';
+    } else {
+      alert(data.message || 'Login failed');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Login failed. Please try again.');
+  }
 });
 </script>
 </body>

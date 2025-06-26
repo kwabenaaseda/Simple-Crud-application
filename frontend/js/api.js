@@ -57,6 +57,7 @@ async function handleFormSubmit(event, endpoint) {
 
         const result = await handleApiRequest(endpoint, method = "POST",data);
         showPopup(`Success: ${result.message || 'Operation completed successfully'} successfully!`);
+        submitBtn.textContent = 'Submitted'; // Change button text to indicate success
         
         if (result.redirectUrl) {
           setTimeout(() => {
@@ -66,6 +67,7 @@ async function handleFormSubmit(event, endpoint) {
         console.error('Error:', error);
         // Show error message to user
         showPopup(`Error: ${error.message || 'An error occurred'}`, 'error');
+        submitBtn.textContent = originalBtnText; // Reset button text
     }
     finally{
         const submitBtn = form.querySelector('button[type="submit"]');

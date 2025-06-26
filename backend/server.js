@@ -9,7 +9,7 @@ const Feedback = require("./models/feedback");
 const Activity = require("./models/activity");
 const authRoutes = require("./routes/authRoutes")
 const {protect} = require("./utils/auth")
-
+const adminRoutes = require('./routes/adminRoutes');
 dotenv.config();
 connectDB(); // Connect to MongoDB
 const PORT = process.env.PORT || 3000;
@@ -50,7 +50,7 @@ server.use((req, res, next) => {
 
 //Routes
 server.use("/api/control/auth",authRoutes)
-
+server.use('/api/admin', adminRoutes);
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 const getTimeStamp = () => {
@@ -256,99 +256,6 @@ server.get("/api/data/users",protect, async (req, res) => {
 });
 //An interface for the admin to see all users
 
-//adds a new admin
-server.post("/api/signup/admin", async (req, res) => {
-   try {
-    /* const user = await User.create(req.body); */
-    const {name:username , mail:email, password} = req.body;
-    if(!username || !email || !password) {
-        return res.apiError("All fields are required",400);
-    }
-    const existingUser = await Admin.findOne({ email });
-    if (existingUser) {
-        return res.apiError("User already exists", 400);
-    }
-
-    if(!password=="admin@2020242914"){
-        return res.apiError("Invalid Admin", 400);
-    }
-    const user = await Admin.create({
-        username,email,password})
-
-
-    await Activity.create({
-      message: `Admin ${user.username} has signed up successfully!`,
-    });
-    res.apiSuccess(
-      { userId: user._id }, 
-      "Signup successful", 
-      { redirectUrl: "https://snappod.netlify.app/homepage.html" }
-    );
-  } catch (error) {
-    await Activity.create({
-      message: `Admin ${req.body.username} failed Signup attempted`,
-      timestamp: getTimeStamp(),
-    });
-    console.error("Error adding user:", error);
-    res.apiError("Registration failed. Please try again", 500);
-  }
-});
-//adds a new user to the db array and assigns an id
-server.post("/api/signup/data/admin", (req, res) => {
-  const userdata = {
-    id: db.length > 0 ? `${db.length}` : "0",
-    userData: req.body,
-  };
-  //middleware
-
-  db.push(userdata);
-  console.log(db);
-  console.log("User Added!!");
-  activity.push({
-    message: `User ${userdata.userData.name} at index: ${userdata.id} by Admin Successfully!!`,
-    timestamp: `${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`,
-  });
-  res.redirect("https://snappod.netlify.app/homepage.html");
-});
-//login admin
-server.post("/api/login/admin", (req, res) => {
-  if (admin.length > 0) {
-    for (let i = 0; i < admin.length; i++) {
-      if (
-        admin[i].adminData.mail == req.body.mail &&
-        admin[i].adminData.password == req.body.password
-      ) {
-        console.log(
-          `User ${admin[i].adminData.name} at index: ${admin[i]} exists !!`
-        );
-        console.log(
-          `User ${admin[i].adminData.name} at index: ${admin[i]} is Logged in Successfully!!`
-        );
-        activity.push({
-          message: `User ${admin[i].adminData.name} at index: ${admin[i]} is Logged in Successfully!!`,
-          timestamp: `${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`,
-        });
-        console.log(admin);
-        res.redirect("https://snappod.netlify.app/homepage.html");
-        //admin dashboard
-      } else {
-        console.log(`User Doesnt exist!`);
-        activity.push({
-          message: `User doesnt exist`,
-          timestamp: `${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`,
-        });
-        res.redirect("https://snappod.netlify.app/adminlogin.html");
-      }
-    }
-  } else {
-    console.log(`User Doesnt exist!`);
-    activity.push({
-      message: `User doesnt exist`,
-      timestamp: `${time.getHours()},${time.getMinutes()},${time.getSeconds()}--${time.getDate()}`,
-    });
-    res.redirect("https://snappod.netlify.app/adminsignup.html");
-  }
-});
 
 //application history
 server.get("/api/data/history",protect, async(req, res) => {

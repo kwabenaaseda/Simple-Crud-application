@@ -1,4 +1,3 @@
-// controllers/adminController.js
 const Admin = require('../models/admin');
 const Activity = require('../models/activity');
 const { generateToken } = require('../utils/auth');
@@ -7,7 +6,7 @@ exports.adminSignup = async (req, res) => {
   try {
     const { name, email, password, secretKey } = req.body;
     
-    // Verify admin secret key
+    // Verify admin secret key from environment variables
     if (secretKey !== process.env.ADMIN_SECRET_KEY) {
       return res.status(401).json({
         success: false,
@@ -28,7 +27,7 @@ exports.adminSignup = async (req, res) => {
     const admin = await Admin.create({
       name,
       email,
-      password
+      password // Will be hashed by pre-save hook
     });
     
     // Log activity
@@ -48,10 +47,69 @@ exports.adminSignup = async (req, res) => {
         name: admin.name,
         email: admin.email,
         role: admin.role
-      }
+      },
+      redirectUrl: "/admin/dashboard" // Or your admin dashboard path
     });
   } catch (error) {
     console.error('Admin signup error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Find admin by email with password
+    const admin = await Admin.findOne({ email }).select('+password');
+    
+    if (!admin) {
+      await Activity.create({
+        message: `Failed admin login attempt for ${email}`
+      });
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid credentials'
+      });
+    }
+    
+    // Check password
+    const isMatch = await admin.comparePassword(password);
+    if (!isMatch) {
+      await Activity.create({
+        message: `Failed admin login attempt for ${email}`
+      });
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid credentials'
+      });
+    }
+    
+    // Generate token
+    const token = generateToken(admin._id, 'admin');
+    
+    // Log activity
+    await Activity.create({
+      message: `Admin ${admin.name} logged in`,
+      admin: admin._id
+    });
+    
+    res.json({
+      success: true,
+      token,
+      admin: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role
+      },
+      redirectUrl: "/admin/dashboard" // Or your admin dashboard path
+    });
+  } catch (error) {
+    console.error('Admin login error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

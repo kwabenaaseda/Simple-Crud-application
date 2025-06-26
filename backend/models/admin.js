@@ -1,6 +1,5 @@
-// models/Admin.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const adminSchema = new mongoose.Schema({
   name: {
@@ -22,17 +21,25 @@ const adminSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    default: "admin@2020242914"
+    select: false
   },
-
-  
+  role: {
+    type: String,
+    default: 'admin'
+  }
 }, { timestamps: true });
 
 // Password hashing middleware
 adminSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+  
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Password comparison method
