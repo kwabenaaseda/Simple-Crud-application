@@ -7,18 +7,14 @@ const User = require("./models/User");
 const Admin = require("./models/admin");
 const Feedback = require("./models/feedback");
 const Activity = require("./models/activity");
+const authRoutes = require("./routes/authRoutes")
+const adminRoutes = require("./routes/adminRoutes")
+const {protect} = require("./utils/auth")
 
 dotenv.config();
 connectDB(); // Connect to MongoDB
 const PORT = process.env.PORT || 3000;
-//Database
-const admin = []; //stores admins
-const db = []; //stores users
-const userdb = []; //stores user specific data
-const userpost = []; //stores user specific posts
-const activity = []; //app history
-const feedback = []; //to take user feedback
-//
+
 //Queue
 const navigation = [];
 //
@@ -36,7 +32,7 @@ server.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-server.user((req, res, next) => {
+server.use((req, res, next) => {
     res.apiSuccess = (data, message = "Success", options = {}) => {
     const response = { success: true, message, data };
     if (options.redirectUrl) {
@@ -53,6 +49,10 @@ server.user((req, res, next) => {
     next();
 })
 
+//Routes
+server.use("/api/control/auth",authRoutes)
+server.use("/api/control/admin",adminRoutes)
+
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 const getTimeStamp = () => {
@@ -65,7 +65,7 @@ const getTimeStamp = () => {
 //Route Requests
 
 //Post (Sign up data) /api/signup/data
-server.post("/api/signup/data", async (req, res) => {
+server.post("/api/signup/data",protect, async (req, res) => {
   try {
     /* const user = await User.create(req.body); */
     const {name , mail, password} = req.body;
@@ -213,7 +213,7 @@ server.post("/api/data/users/delete/admin", async (req, res) => {
 });
 
 //User login
-server.post("/api/signup/data/login", async (req, res) => {
+server.post("/api/signup/data/login",protect, async (req, res) => {
   try {
     const { mail, password } = req.body;
     const user = await User.findOne({ mail, password });
@@ -247,7 +247,7 @@ server.post("/api/signup/data/login", async (req, res) => {
 
 // Administator Endpoints
 //Admin - Get (Get the Data) /api/data
-server.get("/api/data/users", async (req, res) => {
+server.get("/api/data/users",protect, async (req, res) => {
   try{
     const users = await User.find();
     res.apiSuccess(users, "Users retrieved successfully");
@@ -353,7 +353,7 @@ server.post("/api/login/admin", (req, res) => {
 });
 
 //application history
-server.get("/api/data/history", async(req, res) => {
+server.get("/api/data/history",protect, async(req, res) => {
   try{
     const history = await Activity.find();
     res.apiSuccess(history, "History retrieved successfully");
@@ -362,7 +362,7 @@ server.get("/api/data/history", async(req, res) => {
     res.apiError("Error retrieving history", 500);
   }
 });
-server.get("/api/data/admin", async (req, res) => {
+server.get("/api/data/admin",protect, async (req, res) => {
   try{
     const user = await Admin.find();
     res.apiSuccess(user, "User retrieved successfully");
@@ -371,7 +371,7 @@ server.get("/api/data/admin", async (req, res) => {
     res.apiError("Error retrieving User", 500);
   }
 });
-server.get("/api/data/feedback", async(req, res) => {
+server.get("/api/data/feedback",protect, async(req, res) => {
   try{
     const Feedback = await Feedback.find();
     res.apiSuccess(Feedback, "Feedback retrieved successfully");
