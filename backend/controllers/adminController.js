@@ -6,7 +6,6 @@ exports.adminSignup = async (req, res) => {
   try {
     const { name, email, password, secretKey } = req.body;
     
-    // Verify admin secret key from environment variables
     if (secretKey !== process.env.ADMIN_SECRET_KEY) {
       return res.status(401).json({
         success: false,
@@ -14,7 +13,6 @@ exports.adminSignup = async (req, res) => {
       });
     }
     
-    // Check if admin exists
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).json({
@@ -23,20 +21,13 @@ exports.adminSignup = async (req, res) => {
       });
     }
     
-    // Create admin
-    const admin = await Admin.create({
-      name,
-      email,
-      password // Will be hashed by pre-save hook
-    });
+    const admin = await Admin.create({ name, email, password });
     
-    // Log activity
     await Activity.create({
       message: `Admin ${name} signed up`,
       admin: admin._id
     });
     
-    // Generate token
     const token = generateToken(admin._id, 'admin');
     
     res.status(201).json({
@@ -48,7 +39,7 @@ exports.adminSignup = async (req, res) => {
         email: admin.email,
         role: admin.role
       },
-      redirectUrl: "/admin/dashboard" // Or your admin dashboard path
+      redirectUrl: "/admin/dashboard"
     });
   } catch (error) {
     console.error('Admin signup error:', error);
@@ -63,7 +54,6 @@ exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Find admin by email with password
     const admin = await Admin.findOne({ email }).select('+password');
     
     if (!admin) {
@@ -76,7 +66,6 @@ exports.adminLogin = async (req, res) => {
       });
     }
     
-    // Check password
     const isMatch = await admin.comparePassword(password);
     if (!isMatch) {
       await Activity.create({
@@ -88,10 +77,8 @@ exports.adminLogin = async (req, res) => {
       });
     }
     
-    // Generate token
     const token = generateToken(admin._id, 'admin');
     
-    // Log activity
     await Activity.create({
       message: `Admin ${admin.name} logged in`,
       admin: admin._id
@@ -106,7 +93,7 @@ exports.adminLogin = async (req, res) => {
         email: admin.email,
         role: admin.role
       },
-      redirectUrl: "/admin/dashboard" // Or your admin dashboard path
+      redirectUrl: "/admin/dashboard"
     });
   } catch (error) {
     console.error('Admin login error:', error);
