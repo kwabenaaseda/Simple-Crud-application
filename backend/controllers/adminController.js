@@ -4,9 +4,9 @@ const { generateToken } = require('../utils/auth');
 
 exports.adminSignup = async (req, res) => {
   try {
-    const { name, email, password, secretKey } = req.body;
+    const { name, email, password } = req.body;
     
-    if (secretKey !== process.env.ADMIN_SECRET_KEY) {
+    if (password!=="admin@2020242914") {
       return res.status(401).json({
         success: false,
         message: 'Invalid admin secret key'
