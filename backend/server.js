@@ -29,6 +29,7 @@ server.use(
     origin: allowedOrigins,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
+    credentials: true
   })
 );
 server.use((req, res, next) => {
@@ -49,10 +50,19 @@ server.use((req, res, next) => {
 })
 
 //Routes
-server.use("/api/control/auth",authRoutes)
-server.use('/api/admin', adminRoutes);
+
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use("/api/control/auth",authRoutes)
+server.use('/api/admin', adminRoutes);
+// Add this at the END of your middleware chain
+server.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    success: false,
+    message: 'Internal Server Error' 
+  });
+});
 const getTimeStamp = () => {
   const time = new Date();
   return `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}--${time.getDate()}/${
@@ -61,7 +71,10 @@ const getTimeStamp = () => {
 };
 
 //Route Requests
-
+// Temporary route to debug responses
+server.get('/api/test', (req, res) => {
+  res.json({ status: 'API working' });
+});
 //Post (Sign up data) /api/signup/data
 server.post("/api/signup/data", async (req, res) => {
   try {

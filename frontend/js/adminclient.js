@@ -1,5 +1,5 @@
 fetch('https://simple-crud-application-0w9e.onrender.com/api/data/admin', {
-    method: 'GET'
+    method: 'GET',
 })
 .then(res => res.json())
 .then(data =>{
