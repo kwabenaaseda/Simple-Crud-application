@@ -6,18 +6,9 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
- if (process.env.NODE_ENV === 'production' && !process.env.MONGO_URI) {
-         throw new Error('MongoDB connection URI is required in production');
-}
-
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-      poolSize: 10, // Connection pool size
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     });
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
