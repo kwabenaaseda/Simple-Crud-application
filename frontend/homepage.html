@@ -278,7 +278,7 @@
 
         <div class="form-grid">
             <div class="form-container">
-                <form action="https://simple-crud-application-0w9e.onrender.com/api/signup/data/admin" method="post">
+                <form class="auth-form-send" id="registerForm">
                     <fieldset>
                         <legend>Register New User</legend>
                         <div class="form-group">
@@ -303,7 +303,7 @@
             </div>
 
             <div class="form-container">
-                <form action="https://simple-crud-application-0w9e.onrender.com/api/data/users/update/" method="post">
+                <form class="auth-form-update" id="updateForm">
                     <fieldset id="updateList">
                         <legend>Update User</legend>
                         <div class="form-group">
@@ -333,7 +333,7 @@
         <div class="modal-content">
             <h3>Confirm Delete Action</h3>
             <p>Deleted users cannot be retrieved. Are you sure?</p>
-            <form action="https://simple-crud-application-0w9e.onrender.com/api/data/users/delete" method="post" id="confirmform">
+            <form  id="confirmform" class="auth-form-delete">
                 <div class="form-group">
                     <label for="confirm">User ID:</label>
                     <input type="text" name="id" id="confirm" readonly>
@@ -356,17 +356,17 @@
     <script src="/js/api.js"></script>
 <script>
 // For register user form
-document.querySelector('form[action="/api/signup/data/admin"]').addEventListener('submit', (e) => {
+document.querySelector('.auth-form-send').addEventListener('submit', (e) => {
     handleFormSubmit(e, '/api/signup/data/admin');
 });
 
 // For update user form
-document.querySelector('form[action="/api/data/users/update/"]').addEventListener('submit', (e) => {
+document.querySelector('.auth-form-update"]').addEventListener('submit', (e) => {
     handleFormSubmit(e, '/api/data/users/update/');
 });
 
 // For delete confirmation form
-document.querySelector('form[action="/api/data/users/delete"]').addEventListener('submit', (e) => {
+document.querySelector('.auth-form-delete"]').addEventListener('submit', (e) => {
     handleFormSubmit(e, '/api/data/users/delete');
 });
 </script>
