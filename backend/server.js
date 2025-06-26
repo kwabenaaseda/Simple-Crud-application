@@ -66,16 +66,16 @@ const getTimeStamp = () => {
 server.post("/api/signup/data", async (req, res) => {
   try {
     /* const user = await User.create(req.body); */
-    const {name , mail, password} = req.body;
-    if(!name || !mail || !password) {
+    const {name:username , mail: email, password} = req.body;
+    if(!username || !email || !password) {
         return res.apiError("All fields are required",400);
     }
-    const existingUser = await User.findOne({ mail });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
         return res.apiError("User already exists", 400);
     }
     const user = await User.create({
-        name,mail,password})
+        username,email,password})
 
 
     await Activity.create({
@@ -260,11 +260,11 @@ server.get("/api/data/users",protect, async (req, res) => {
 server.post("/api/signup/admin",async (req, res) => {
    try {
     /* const user = await User.create(req.body); */
-    const {name , mail, password} = req.body;
-    if(!name || !mail || !password) {
+    const {name:username , mail:email, password} = req.body;
+    if(!username || !email || !password) {
         return res.apiError("All fields are required",400);
     }
-    const existingUser = await Admin.findOne({ mail });
+    const existingUser = await Admin.findOne({ email });
     if (existingUser) {
         return res.apiError("User already exists", 400);
     }
@@ -273,7 +273,7 @@ server.post("/api/signup/admin",async (req, res) => {
         return res.apiError("Invalid Admin", 400);
     }
     const user = await Admin.create({
-        name,mail,password})
+        username,email,password})
 
 
     await Activity.create({
