@@ -8,7 +8,6 @@ const Admin = require("./models/admin");
 const Feedback = require("./models/feedback");
 const Activity = require("./models/activity");
 const authRoutes = require("./routes/authRoutes")
-const adminRoutes = require("./routes/adminRoutes")
 const {protect} = require("./utils/auth")
 
 dotenv.config();
@@ -51,7 +50,6 @@ server.use((req, res, next) => {
 
 //Routes
 server.use("/api/control/auth",authRoutes)
-server.use("/api/control/admin",adminRoutes)
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));

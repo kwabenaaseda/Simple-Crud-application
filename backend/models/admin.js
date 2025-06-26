@@ -24,9 +24,7 @@ const adminSchema = new mongoose.Schema({
     required: true,
     default: "admin@2020242914"
   },
-  role:{
-    default:"admin"
-  }
+
   
 }, { timestamps: true });
 
