@@ -257,7 +257,7 @@ server.get("/api/data/users",protect, async (req, res) => {
 //An interface for the admin to see all users
 
 //adds a new admin
-server.post("/api/signup/admin",async (req, res) => {
+server.post("/api/signup/admin",protect, async (req, res) => {
    try {
     /* const user = await User.create(req.body); */
     const {name:username , mail:email, password} = req.body;
@@ -294,7 +294,7 @@ server.post("/api/signup/admin",async (req, res) => {
   }
 });
 //adds a new user to the db array and assigns an id
-server.post("/api/signup/data/admin", (req, res) => {
+server.post("/api/signup/data/admin",protect, (req, res) => {
   const userdata = {
     id: db.length > 0 ? `${db.length}` : "0",
     userData: req.body,
