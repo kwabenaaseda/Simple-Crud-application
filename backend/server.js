@@ -54,7 +54,7 @@ server.use((req, res, next) => {
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-server.use("/api/control/auth",authRoutes)
+server.use("/api/signup/data",authRoutes)
 server.use('/api/admin', adminRoutes);
 // Add this at the END of your middleware chain
 server.use((err, req, res, next) => {
