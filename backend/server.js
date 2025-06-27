@@ -7,6 +7,7 @@ const User = require("./models/User");
 const Admin = require("./models/admin");
 const Feedback = require("./models/feedback");
 const Activity = require("./models/activity");
+const Profile = require("./models/Profile")
 const authRoutes = require("./routes/authRoutes")
 const {protect} = require("./utils/auth")
 const adminRoutes = require('./routes/adminRoutes');
@@ -75,39 +76,6 @@ const getTimeStamp = () => {
 server.get('/api/test', (req, res) => {
   res.json({ status: 'API working' });
 });
-//Post (Sign up data) /api/signup/data
-server.post("/api/signup/data", async (req, res) => {
-  try {
-    /* const user = await User.create(req.body); */
-    const {name:username , mail: email, password} = req.body;
-    if(!username || !email || !password) {
-        return res.apiError("All fields are required",400);
-    }
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return res.apiError("User already exists", 400);
-    }
-    const user = await User.create({
-        username,email,password})
-
-
-    await Activity.create({
-      message: `User ${user.username} has signed up successfully!`,
-    });
-    res.apiSuccess(
-      { userId: user._id }, 
-      "Signup successful", 
-      { redirectUrl: "https://snappod.netlify.app/user.html" }
-    );
-  } catch (error) {
-    await Activity.create({
-      message: `User ${req.body.username} failed Signup attempted`,
-      timestamp: getTimeStamp(),
-    });
-    console.error("Error adding user:", error);
-    res.apiError("Registration failed. Please try again", 500);
-  }
-}); //adds a new user to the db array and assigns an id
 
 //put (update the data) /api/data/id
 server.post("/api/data/users/update/",protect, async (req, res) => {
@@ -223,38 +191,7 @@ server.post("/api/data/users/delete/admin",protect, async (req, res) => {
   }
 });
 
-//User login
-server.post("/api/signup/data/login", async (req, res) => {
-  try {
-    const { mail, password } = req.body;
-    const user = await User.findOne({ mail, password });
-    
-    if (user) {
-      await Activity.create({
-        message: `User ${user.name} logged in successfully!`
-      });
-     res.apiSuccess(
-        { userId: user._id, userData: user },
-        "Login successful",
-        { redirectUrl: "https://snappod.netlify.app/user.html" }
-     )
-    } else {
-      await Activity.create({
-        message: `Failed login attempt for ${mail}`
-      });
-      res.apiError("Invalid email or password", 401);
-    }
-  } catch (error) {
-    console.error(error);
-    res.apiError("Login failed. Please try again", 500);
-  }
-});
 
-//get user id
-//get user posts
-//search for user
-//add friend
-//remove friend
 
 // Administator Endpoints
 //Admin - Get (Get the Data) /api/data

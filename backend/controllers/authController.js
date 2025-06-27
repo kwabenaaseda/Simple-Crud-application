@@ -43,8 +43,10 @@ exports.signup = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email
-      }
+      },
+      redirectUrl: "/user"
     });
+    
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({
@@ -94,7 +96,8 @@ exports.login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email
-      }
+      },
+      redirectUrl: "/user"
     });
   } catch (error) {
     console.error('Login error:', error);
