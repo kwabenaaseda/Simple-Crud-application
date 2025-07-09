@@ -3,13 +3,20 @@ const Task = require('../models/task');
 // controllers/taskController.js
 exports.createTask = async (req, res) => {
   try {
+    console.log("🚀 createTask: req.body =", req.body);
+    console.log("🚀 createTask: req.user =", req.user);
+
     const task = new Task({ ...req.body, user: req.user._id });
     await task.save();
+    console.log("✅ Task saved:", task);
+
     res.status(201).json({ success: true, message: 'Task saved', task });
   } catch (err) {
+    console.error("❌ createTask error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 exports.getAllTasks = async (req, res) => {
   try {
