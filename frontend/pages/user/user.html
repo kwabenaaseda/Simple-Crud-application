@@ -1,1048 +1,569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StackTasks</title>
-   <style>
-*{
-    list-style: none;
-}
-
-
-:root { 
-    --bg-light: #ffffff;
-    --bg-dark: #1e1e1e;
-    --text-light: #000000;
-    --text-dark: #ffffff;
-    --accent-color: #007bff;
-    --sidebar-bg-light: #f8f9fa;
-    --sidebar-bg-dark: #292929;
-    --menu-item-light: #007bff;
-    --menu-item-dark: #4dabf7;
-    --hover-bg-light: #f0f0f0;
-    --hover-bg-dark: #333333;
-    --shadow-light: rgba(0, 0, 0, 0.1);
-    --btn-bg: #007bff; /* Add a default button background */
-}
-
-@media (prefers-color-scheme: dark) {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snappod | Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
     :root {
-        --bg-light: var(--bg-dark);
-        --text-light: var(--text-dark);
-        --sidebar-bg-light: var(--sidebar-bg-dark);
-        --menu-item-light: var(--menu-item-dark);
-        --hover-bg-light: var(--hover-bg-dark);
+      --primary: #6c5ce7;
+      --secondary: #00cec9;
+      --danger: #d63031;
+      --glass: rgba(255, 255, 255, 0.9);
+      --dark-glass: rgba(30, 30, 30, 0.85);
+      --transition: 0.3s ease;
     }
-}
 
-body {
-    margin: 0;
-    background-color: var(--bg-light);
-    color: var(--text-light);
-    font-family: sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    color:#f0f0f0;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    overflow-y: auto;
--webkit-overflow-scrolling: touch; /* enables smooth scrolling on iOS */
-
-}
-
-/* Sidebar */
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -300px;
-    height: 100%;
-    width: 280px;
-    background-color: var(--sidebar-bg-light);
-    box-shadow: 4px 0 12px var(--shadow-light);
-    padding: 20px;
-    transition: left 0.3s ease, background-color 0.3s ease;
-    z-index: 100;
-    overflow-y: auto;
-}
-
-.side-menu.open {
-    left: 0;
-}
-
-.side-menu .menu-item {
-    color: var(--text-light);
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 18px;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.side-menu .menu-item:hover {
-    background-color: var(--hover-bg-light);
-    color: var(--menu-item-light);
-}
-
-#darkModeToggle {
-    background-color: var(--bg-light);
-    color: var(--text-light);
-    border: none;
-    font-size: 18px;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#darkModeToggle:hover {
-    background-color: var(--hover-bg-light);
-    color: var(--menu-item-light);
-}
-
-/* Dark Mode: Switch to Dark Colors */
-/* Default Light Mode */
-
-  body.dark-mode {
-    background-color: #121212;
-    color: #f5f5f5;
-  }
-  
-  .header {
-    background-color: #fff;
-    color: #000;
-  }
-  
-  body.dark-mode .header {
-    background-color: #1e1e1e;
-    color: #fff;
-  }
-  
-/* Header */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 99%;
-    height: 60px;
-    background-color: var(--bg-light);
-    box-shadow: 0 2px 10px var(--shadow-light);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    z-index: 100;
-    color: white;
-}
-#userBtn{
-    padding: 1em;
-    border-radius: 50%;
-    border: none;
-}
-/* Online/offline button status colors */
-#userBtn {
-    background-color: #ccc; /* Default offline */
-    transition: background-color 0.3s ease;
-  }
-  
-  #userBtn.online {
-    background-color: green;
-  }
-  
-  #userBtn.offline {
-    background-color: red;
-  }
-main {
-    flex: 1;
-    padding: 80px 16px 120px; /* top, sides, bottom (to avoid the task bar) */
-    overflow-y: scroll;
-    height: 200px;
-    box-sizing: border-box;
-    scrollbar-width: none;
-    position: fixed;
-    width: 100%;
-    height: 100dvh;
-}
-
-/* Task bar */
-.task-bar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 80px;
-    background-color: var(--bg-light);
-    box-shadow: 0 -2px 10px var(--shadow-light);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    z-index: 10;
-}
-
-/* Message popup */
-.message-popup {
-    position: absolute;
-    top: 70px;
-    right: 20px;
-    width: 250px;
-    background: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 12px;
-    border-radius: 8px;
-    display: none;
-    z-index: 200;
-}
-
-/* .message-popup.active {
-    display: block;
-} */
-
-/* Add button */
-.add-button {
-    transform: translateY(-40%);
-    width: 64px;
-    height: 64px;
-    background-color: var(--btn-bg);
-    border: none;
-    border-radius: 50%;
-    color: var(--btn-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    z-index: 20;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.add-button img {
-    width: 28px;
-    height: 28px;
-    pointer-events: none;
-}
-
-.add-button:hover {
-    transform: translateY(-50%) scale(1.05) rotate(8deg);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-}
-
-/* Overlay */
-.side-menu-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease;
-    z-index: 99;
-}
-.message-popup{
-    color: black;
-}
-
-/* Active classes */
-.side-menu.open {
-    left: 0;
-}
-
-.side-menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-.message-popup.open {
-    
-    display: flex;
-    flex-direction: column;
-    height: max-content;
-    min-height: 100px;
-    max-height: 400px;
-    overflow-y:auto;
-    scrollbar-width:thin;
-    box-sizing: border-box;
-    width: max-content;
-    max-width: 500px;
-}
-
-
-.message-popup.active {
-    display: flex;
-    flex-direction: column;
-    opacity: 1;
-    visibility: visible;
-}
-
-.message-popup ul{
-    border: 2px solid none;
-    display: inline-flex;
-    flex-direction: column;
-    gap: 0.4em;
-    margin-top: -1.2em;
-    width: 100%;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-
-}
-.message-popup ul li{
-border-bottom: 1px solid none;
-width: 100%;
-background-color: var(--menu-item-light);
-border-radius: 5px;
-min-height: 40px;
-max-height: 60px;
-overflow-y: hidden;
-align-items: center;
-display: flex;
-cursor: pointer;
-padding: 0.3em;
-}
-.message-popup ul li:hover{
-    transform: translateY(-0.2em);
-    background-color: var(--menu-item-dark);
-}
-
-.message-popup ul li.dark-mode{
-    background-color:rgba(14, 179, 102, 0.63)
-}
-.message-popup ul li.dark-mode:hover{
-    background-color: var(--menu-item-light);
-}
-
-
-.message-popup h3{
-    position:sticky;
-    top: 0.5em;
-    background-color:white;
-    transform: translateY(-1.2em);
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
-}
-
-.task-item {
-    max-width: 600px;
-    margin: 12px auto 12px 40px; /* top, right, bottom, left */
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-left: 4px solid #007bff;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    color: black;
-}
-
-.task-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    z-index: 150;
-}
-
-.task-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 90%;
-    max-width: 400px;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    display: none;
-    z-index: 200;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    color: #000000;
-}
-
-
-.task-modal input,
-.task-modal select,
-.task-modal textarea {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-
-
-.task-modal button[type="submit"] {
-    background-color: var(--btn-bg);
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 60vh;
-    text-align: center;
-    color: #555;
-    opacity: 0.8;
-  }
-  
-  .empty-img {
-    max-width: 300px;
-    width: 80%;
-    margin-bottom: 1rem;
-  }
-  
-  .empty-state h2 {
-    font-size: 2em;
-    margin: 0.5rem 0;
-  }
-  
-  .empty-state a {
-    color: #007BFF;
-    text-decoration: underline;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  #learnMore{
-    display: inline-flex;
-    align-items: center;
-  }
-  #learnMore img{
-    max-width: 30px;
-    min-width: 24px;
-  }
-
-  .itenary{
-    border: 1px solid none;
-    display: inline-flex;
-    flex-direction: row-reverse;
-    width: 60%;
-    justify-content: space-evenly;
-    margin-bottom: 0.4em;
-    align-items: center;
-
-
-}
-#collaborateTask,
-#shareTask{
-width: 20px;
-max-width: 40px;
-min-width: 20px;
-}
-
-.itenary img{
-    width: 20px;
-max-width: 40px;
-min-width: 20px;
-}
-.flame-container {
-    padding: 1rem;
-    z-index: 100;
-  }
-  
-  .flames {
-    width: 80px;
-    animation: flickerAndFlip 1.2s infinite ease-in-out;
-    transform-origin: center;
-  }
-  
-  /* Flicker and flip effect */
-  @keyframes flickerAndFlip {
-    0% {
-      opacity: 1;
-      transform: rotateY(0deg) scale(1);
-      filter: brightness(1);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    25% {
-      opacity: 0.7;
-      transform: rotateY(90deg) scale(1.05);
-      filter: brightness(1.4);
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      transition: var(--transition);
     }
-    50% {
-      opacity: 0.9;
-      transform: rotateY(180deg) scale(1);
-      filter: brightness(0.8);
+
+    body.dark {
+      background: #121212;
+      color: #f5f5f5;
     }
-    75% {
-      opacity: 0.6;
-      transform: rotateY(270deg) scale(0.95);
-      filter: brightness(1.2);
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    100% {
-      opacity: 1;
-      transform: rotateY(360deg) scale(1);
-      filter: brightness(1);
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary);
     }
-  }
-  
-  /* Responsive flame position */
-  @media screen and (max-width: 600px) {
-    .flame-container {
-         padding: 1rem;
-         z-index: 100;
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: inherit;
     }
-    .flames {
+
+    .task-container {
+      padding: 6rem 1rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .task-card {
+      background: var(--glass);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: var(--transition);
+    }
+
+    body.dark .task-card {
+      background: var(--dark-glass);
+      color: #eaeaea;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .task-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .task-meta span {
+      background: #eaeaea;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+    }
+
+    body.dark .task-meta span {
+      background: #2e2e2e;
+      color: #ddd;
+    }
+
+    .task-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .task-actions button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .task-actions button:hover {
+      background: var(--secondary);
+      transform: scale(1.05);
+    }
+
+    .task-actions .danger {
+      background: var(--danger);
+    }
+
+    .add-task-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
       width: 60px;
+      height: 60px;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 10;
+      transition: var(--transition);
     }
-  }
-  
 
-  #CONFIRMDELETE{
-    display: none;
-    position: fixed;
-    box-sizing: border-box;
-    border: 1px solid none;
-    background-color: white;
-    width: 300px;
-    align-self: center;
-    transform: translateY(20dvi);
-    color: black;
-    text-align: center;
-    padding: 2em;
-    border-radius: 15px;
-    box-shadow: 0px 0px 8px 8px rgb(202, 199, 199);
-  }
-  #CONFIRMDELETE button{
-    width: 100px;
-    height: 50px;
-    border-radius: 15px;
-    border: none;
-    font-weight: bolder;
-    cursor: pointer;
-  }
-  .ConfirmBtn{
-    background-color: rgba(255, 30, 0, 0.842);
-    color: white;
-  }
-  .Returnbtn{
-    background-color: rgb(165, 163, 163);
-  }
+    .add-task-btn:hover {
+      transform: scale(1.1);
+      background: var(--secondary);
+    }
 
-  #Active{
-    border-left-color: green; 
-    background-color: black;
-     color: white;
-      text-decoration: line-through;
-  }
+    .task-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      display: none;
+      z-index: 999;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
 
-   </style>
+    body.dark .task-modal {
+      background: var(--dark-glass);
+    }
+
+    .task-modal input,
+    .task-modal textarea {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .task-modal button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .task-modal button:hover {
+      background: var(--secondary);
+    }
+
+    .task-modal.active {
+      display: block;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 60px;
+      left: -280px;
+      height: calc(100% - 60px);
+      width: 260px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+      padding: 2rem 1rem;
+      transition: var(--transition);
+      z-index: 99;
+      overflow-y: auto;
+      font-size: 0.95rem;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu h3 {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-menu li {
+      margin-bottom: 0.75rem;
+    }
+
+    .side-menu a,
+    .side-menu button {
+      text-decoration: none;
+      color: #2d3436;
+      display: block;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .side-menu a:hover,
+    .side-menu button:hover {
+      background: rgba(108, 92, 231, 0.1);
+    }
+
+    body.dark .side-menu {
+      background: var(--dark-glass);
+    }
+
+    body.dark .side-menu a,
+    body.dark .side-menu button {
+      color: #f0f0f0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      z-index: 98;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 600px) {
+      .task-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .task-actions {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle Menu">☰</button>
-    <h1 class="app-title">Snappod Tasks</h1>
-    <div class="header-image">
-        <button type="button" class="icon-btn" id="messageBtn" title="Messages">💬</button>
-        <button type="button" class="icon-btn" id="userBtn" title="User">AB</button>
-    </div>
-</header>
+  <header>
+    <button class="theme-toggle" id="menuToggle">☰</button>
+    <div class="logo">Snappod Tasks</div>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+  </header>
 
-
-  <!-- Main Content -->
-  <main id="main">
-    <div class="empty-state" id="emptyState">
-        <img src="../../image/Binocularsbino.png" alt="No Tasks" class="empty-img" />
-        <h2>ADD A TASK</h2>
-        <p><a href="#" id="learnMore"><img src="../../image/Supporthelp.png" alt="">Learn More</a></p>
-      </div>
-      
-  </main>
-
-  <!-- Task Entry Modal -->
-  <div class="task-modal-overlay" id="taskModalOverlay"></div>
-  <div class="task-modal" id="taskModal">
-    <h2 id="HeaderTask">Add New Task</h2>
-    <form id="taskForm">
-      <input type="text" id="taskName" placeholder="Task Name" required />
-      <select id="taskPriority">
-        <option value="low">Low Priority</option>
-        <option value="medium">Medium Priority</option>
-        <option value="high">High Priority</option>
-        <option value="undetermined">Undetermined</option>
-      </select>
-      <input type="datetime-local" id="taskSchedule" />
-      <textarea id="taskDesc" placeholder="Task Description"></textarea>
-      <label class="itenary"><input type="checkbox" id="shareTask" /> Share Task<img src="../../image/github-removebg-preview.png" alt="share"></label>
-      <label class="itenary"><input type="checkbox" id="collaborateTask" />Collaborate<img src="../../image/PlusAdd.png" alt="collab"></label>
-      <!-- Share buttons -->
-<!-- Share buttons (initially hidden) -->
-<div id="shareButtons" style="margin-top: 1rem; display: none; gap: 1rem;">
-  <button class="share-btn" id="shareMail" title="Share via Email">
-    <img src="../../image/emaillogo.png" alt="Email" style="width:20px; vertical-align:middle;" /> Email
-  </button>
-  <button class="share-btn" id="shareWhatsApp" title="Share via WhatsApp">
-    <img src="../../image/whatsapp logo.png" alt="WhatsApp" style="width:20px; vertical-align:middle;" /> WhatsApp
-  </button>
-  <button class="share-btn" id="shareFacebook" title="Share via Facebook">
-    <img src="../../image/facebooklogo.png" alt="Facebook" style="width:20px; vertical-align:middle;" /> Facebook
-  </button>
-</div>
-
-
-      
-      <button type="submit" id="Submit Task">Add Task</button>
-    </form>
-  </div>
-
-  <!-- Messages Popup -->
-  <div class="message-popup" id="messagePopup">
-    <h3>Messages</h3>
-    <ul>
-      <li class="dark-mode">😎Welcome to your task manager!</li>
-      <li class="dark-mode">😋New update coming soon!</li>
-      
-    </ul>
-  </div>
-
-  <!--Delete Task Confimation-->
-  <div id="CONFIRMDELETE">
-    <h3>Are You Sure ?</h3>
-    <button class="ConfirmBtn" id="confirm" onclick="actualDelete()">Confirm</button>
-    <button class="Returnbtn" id="return" onclick="Delete()">Return</button>
-  </div>
-  <!--Update Task Modal-->
-
-  <!-- Bottom Add Button (Floating Action Button) -->
-  <button class="add-btn" id="addBtn" title="Quick Add Task">➕</button>
-
-  <!-- Sidebar Drawer -->
-  <div class="side-menu-overlay" id="overlay"></div>
   <aside class="side-menu" id="sideMenu">
-    <button class="close-btn" id="closeBtn">×</button>
-
-    <div class="side-section">
-      <h3 class="menu-item">Tasks</h3>
-      <nav>
-        <ul>
-          <li><a href="#" id="ongoingTasksLink" class="menu-item">📌 Ongoing</a></li>
-          <li><a href="#" id="scheduledTasksLink" class="menu-item">🗓️ Scheduled</a></li>
-          <li><a href="#" id="previousTasksLink" class="menu-item">📁 Previous</a></li>
-        </ul>
-      </nav>
-    </div>
-
-    <hr />
-
-    <div class="side-section">
-      <h3 class="menu-item">Preferences</h3>
-      <nav>
-        <ul>
-          <li><a href="#" class="menu-item" id="ProfileLink">👤 Profile</a></li>
-          <li><a href="#" class="menu-item" id="SettingsLink">⚙️ Settings</a></li>
-          <li><button class="menu-item" id="darkModeToggle">🌓 Dark Mode</button></li>
-          <li><a href="/" title="Logout" class="menu-item" style="background-color: rgb(202, 49, 49);">🏁Logout</a></li>
-        </ul>
-      </nav>
-    </div>
+    <h3>Navigation</h3>
+    <ul>
+      <li><a href="#">📌 Ongoing</a></li>
+      <li><a href="#">🗓️ Scheduled</a></li>
+      <li><a href="#">📁 Previous</a></li>
+    </ul>
+    <hr>
+    <h3>Preferences</h3>
+    <ul>
+      <li><a href="#">👤 Profile</a></li>
+      <li><a href="#">⚙️ Settings</a></li>
+      <li><button id="logoutBtn">🏁 Logout</button></li>
+    </ul>
   </aside>
+  <div class="overlay" id="overlay"></div>
 
-  <!-- Fixed Bottom Task Bar (Optional Visual Button) -->
-  <div class="task-bar">
-    <button class="add-button" id="openBtn" aria-label="Add Task">
-      <img src="../../image/PlusAdd.png" alt="Plus Icon" />
-    </button>
+  <div class="task-container" id="taskList"></div>
+
+  <button class="add-task-btn" id="addTask">+</button>
+
+  <div class="task-modal" id="taskModal">
+    <h2>Add Task</h2>
+    <input type="text" id="taskName" placeholder="Task name">
+    <input type="datetime-local" id="taskDate">
+    <textarea id="taskDesc" placeholder="Task description..."></textarea>
+    <button id="saveTask">Save Task</button>
   </div>
+<script src="../../js/env.js"></script>
+  <script src="../../js/api.js"></script>
+ <script>
+  // 🔁 Background sync when back online
+  window.addEventListener('online', syncPendingTasks);
 
-  <!-- Scripts -->
-  <script>
-const openBtn = document.getElementById("openBtn");
-const addBtn = document.getElementById("addBtn");
-const taskModal = document.getElementById("taskModal");
-const taskModalOverlay = document.getElementById("taskModalOverlay");
-const taskForm = document.getElementById("taskForm");
-const main = document.getElementById("main");
-const messageBtn = document.getElementById("messageBtn");
-const messagePopup = document.getElementById("messagePopup");
+  // 🌙 Auto dark mode from system
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefersDark) {
+    document.body.classList.add('dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
 
-// Sidebar elements
-const menuToggleBtn = document.getElementById("menuToggleBtn");
-const sideMenu = document.getElementById("sideMenu");
-const overlay = document.getElementById("overlay");
-const closeBtn = document.getElementById("closeBtn");
-const darkModeToggle = document.getElementById("darkModeToggle");
-
-
-// Message popup toggle
-messageBtn.addEventListener("click", toggleMessagePopUp);
-
-function toggleMessagePopUp() {
-  messagePopup.classList.toggle("open");
-  messagePopup.classList.toggle("active");
-}
-
-// Show Modal
-[openBtn, addBtn].forEach((btn) => {
-  btn.addEventListener("click", () => {
-    taskModal.style.display = "block";
-    taskModalOverlay.style.display = "block";
-    const headerTask = document.getElementById("HeaderTask")
-    const SubmitTask = document.getElementById("Submit Task")
-  
-    headerTask.textContent="ADD TASK"
-  SubmitTask.textContent="ADD"
-  
-  });
-});
-
-// Hide Modal when clicking outside
-taskModalOverlay.addEventListener("click", () => {
-  taskModal.style.display = "none";
-  taskModalOverlay.style.display = "none";
-});
-
-
-// Handle Form Submit
-taskForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById("taskName").value;
-  const priority = document.getElementById("taskPriority").value;
-  const schedule = document.getElementById("taskSchedule").value;
-  const desc = document.getElementById("taskDesc").value;
-  const share = document.getElementById("shareTask").checked;
-  const collaborate = document.getElementById("collaborateTask").checked;
-
-  const task = document.createElement("div");
-  task.classList.add("task-item");
-  task.innerHTML = `
-    <strong>${name}</strong><br>
-   <div>
-    <span>Priority: ${priority}</span><br>
-    <span>Schedule: ${schedule || "Not Scheduled"}</span><br>
-    <span>Description: ${desc}</span></div><br>
-    ${share ? "🔗 Shared" : ""} ${collaborate ? "🤝 Collaboration" : ""}
-  `;
-  
-  const urgent = document.createElement("div");
-  const priorityIcons = {
-    low: "/image/green.png",
-    medium: "/image/yellow.png",
-    high: "/image/red.png",
-    undetermined: "/image/black.png"
-  };
-
-  urgent.innerHTML = `<img src="${priorityIcons[priority]}" class="flames" alt="flame" id="f-Active"/>`;
-  task.appendChild(urgent);
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.value="delete";
-  deleteBtn.id="deleteBtn";
-  deleteBtn.addEventListener("click",Delete)
-  const UpdateBtn = document.createElement("button");
-  UpdateBtn.value="update";
-  UpdateBtn.id="updateBtn";
-  UpdateBtn.addEventListener("click",Update)
-  const CompletedBtn = document.createElement("button");
-  CompletedBtn.value="complete";
-  CompletedBtn.id="completeBtn";
-  CompletedBtn.addEventListener("click",Complete)
-  const DisplayBtn = document.createElement("button");
-  DisplayBtn.value="display";
-  DisplayBtn.id="DisplayBtn";
-  DisplayBtn.addEventListener("click",Display)
-
-  deleteBtn.textContent="🗑"
-  UpdateBtn.textContent="🖋"
-  CompletedBtn.textContent="✅"
-  DisplayBtn.textContent="👁"
-  //Function Calls
-  CompletedBtn.addEventListener("click",()=>{
-    if (CompletedBtn.textContent==="✅"){
-      CompletedBtn.textContent="✔"
-    }else{
-      CompletedBtn.textContent="✅"
+  // 🌐 DOM Ready
+// Ensure DOM is ready
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await handleApiRequest('/api/tasks', 'GET');
+    if (response.success && Array.isArray(response.tasks)) {
+      response.tasks.forEach(renderTask);
     }
-  })
- 
-  //Functions
+  } catch (err) {
+    showPopup('Could not load tasks from server.', 'error');
+  }
 
-  const ContainerFunction=document.createElement("div");
-  ContainerFunction.className="function"
-  ContainerFunction.appendChild(CompletedBtn)
-  ContainerFunction.appendChild(UpdateBtn)
-  ContainerFunction.appendChild(deleteBtn)
-  ContainerFunction.appendChild(DisplayBtn)
-  ContainerFunction.style.border="none"
+  // Load and render pending tasks
+  const pending = JSON.parse(sessionStorage.getItem('pendingTasks') || '[]');
+  pending.forEach(renderTask);
+  await syncPendingTasks();
+});
 
-  task.appendChild(ContainerFunction)
-
-  main.appendChild(task);
-
-  // Handle empty state visibility
-  const emptyState = document.getElementById("emptyState");
-  const tasks = document.querySelectorAll(".task-item");
-  emptyState.style.display = tasks.length > 0 ? "none" : "flex";
-
-  // Store task data in localStorage
+// Save task to backend and session
+document.getElementById('saveTask').addEventListener('click', async () => {
   const taskData = {
-    name,
-    priority,
-    schedule,
-    description: desc,
-    share,
-    collab: collaborate
-  };
-// fetch and api calls here
-
-  // Close modal
-  taskModal.style.display = "none";
-  taskModalOverlay.style.display = "none";
-  taskForm.reset();
-});
-
-       //Call Objects
- const Container = document.getElementById("CONFIRMDELETE")
-       /* const Return = document.getElementById("return");
-       const Confirm = document.getElementById("confirm"); */
-function Delete(event) {
-  const taskDiv = event.target.closest('.task-item');
-  const taskClass = event.target.className;
-
-  // Remove from DOM
-  taskDiv.remove();
-
- 
-
-  // Update empty state visibility
-  const tasks = document.querySelectorAll(".task-item");
-  const emptyState = document.getElementById("emptyState");
-  emptyState.style.display = tasks.length > 0 ? "none" : "flex";
-}
-
-function Update(event) {
-  const taskDiv = event.target.closest('.task-item');
-  const taskClass = event.target.className;
- 
-  const headerTask = document.getElementById("HeaderTask")
-  const SubmitTask = document.getElementById("Submit Task")
-
-  // Show modal
-  taskModal.style.display = "block";
-  taskModalOverlay.style.display = "block";
-  headerTask.textContent="UPDATE TASK"
-  SubmitTask.textContent="UPDATE"
-  
-  // Update task on submit
-  taskForm.onsubmit = (e) => {
-    e.preventDefault();
-    Delete(event)
-
-    // Get new values
-    const updatedData = {
-      name: document.getElementById("taskName").value,
-      priority: document.getElementById("taskPriority").value,
-      schedule: document.getElementById("taskSchedule").value,
-      description: document.getElementById("taskDesc").value,
-      share: document.getElementById("shareTask").checked,
-      collab: document.getElementById("collaborateTask").checked
-    };
-
-    //api calls for updates here
-
-    // Re-render the task
-    taskDiv.innerHTML = `
-      <strong>${updatedData.name}</strong><br>
-     <div>
-      <span>Priority: ${updatedData.priority}</span><br>
-      <span>Schedule: ${updatedData.schedule || "Not Scheduled"}</span><br>
-      <span>Description: ${updatedData.description}</span>
-      </div><br>
-      ${updatedData.share ? "🔗 Shared" : ""} ${updatedData.collab ? "🤝 Collaboration" : ""}
-    `;
- 
-    const urgent = document.createElement("div");
-    const priorityIcons = {
-      low: "../../image/green.png",
-      medium: "../../image/yellow.png",
-      high: "../../image/red.png",
-      undetermined: "../../image/black.png"
-    };
-    urgent.innerHTML = `<img src="${priorityIcons[updatedData.priority]}" class="flames" alt="flame" />`;
-    taskDiv.appendChild(urgent);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "🗑";
-    deleteBtn.className = taskClass;
-    deleteBtn.addEventListener("click", Delete);
-
-    const updateBtn = document.createElement("button");
-    updateBtn.textContent = "🖋";
-    updateBtn.className = taskClass;
-    updateBtn.addEventListener("click", Update);
-
-    const completeBtn = document.createElement("button");
-    completeBtn.textContent = "✅";
-    completeBtn.className = taskClass;
-    completeBtn.addEventListener("click", () => {
-      completeBtn.textContent = completeBtn.textContent === "✅" ? "✔" : "✅";
-    });
-    const DisplayBtn = document.createElement("button");
-    DisplayBtn.textContent = "👁";
-    DisplayBtn.className = taskClass;
-    DisplayBtn.addEventListener("click",Display);
-
-    const funcContainer = document.createElement("div");
-    funcContainer.className = "function";
-    funcContainer.style.border = "none";
-    funcContainer.appendChild(completeBtn);
-    funcContainer.appendChild(updateBtn);
-    funcContainer.appendChild(deleteBtn);
-    funcContainer.appendChild(DisplayBtn);
-
-    taskDiv.appendChild(funcContainer);
-
-    // Close modal
-    taskModal.style.display = "none";
-    taskModalOverlay.style.display = "none";
-    taskForm.reset();
-
-    // Restore default submit behavior
-    taskForm.onsubmit = null;
-    localStorage.setItem("reloadAgain", "true");
-    location.reload(); // First reload
-    
-  };
-}
-
- function Complete(event){  
-  const taskDiv = event.target.closest('.task-item');
-  const taskClass = event.target.className;
-  taskDiv.id = "Active";
-    document.getElementById("f-Active").setAttribute("src","/image/yellow.png")
-    console.log(document.getElementById("f-Active").parentElement.parentElement.firstElementChild.textContent)
-  console.log(taskDiv)
-  ///
-  const updatedData = {
-    name: document.getElementById("f-Active").parentElement.parentElement.firstElementChild.textContent,
-    priority: document.getElementById("taskPriority").value,
-    schedule: document.getElementById("taskSchedule").value,
-    description: document.getElementById("taskDesc").value,
-    share: document.getElementById("shareTask").checked,
-    collab: document.getElementById("collaborateTask").checked
+    name: document.getElementById('taskName').value.trim(),
+    schedule: document.getElementById('taskDate').value,
+    description: document.getElementById('taskDesc').value.trim(),
+    priority: 'normal',
+    share: false,
+    collab: false
   };
 
-  // Save to localStorage    
-  localStorage.setItem("Done", JSON.stringify(updatedData)); 
-  console.log(document.getElementById("taskName").value)
-  
+  // Don't allow empty names
+  if (!taskData.name) return showPopup("Task name is required", "error");
 
-       }  
+  renderTask(taskData);
+  queuePendingTask(taskData); // Save locally
 
- function Display(event){
-  const body = event.target.closest("article")
-  body.style.display="none"
-  
-
- }
-      
-// Side Menu Handlers
-menuToggleBtn.addEventListener("click", toggleSideMenu);
-overlay.addEventListener("click", toggleSideMenu);
-closeBtn.addEventListener("click", toggleSideMenu);
-
-function toggleSideMenu() {
-  sideMenu.classList.toggle("open");
-  overlay.classList.toggle("active");
-}
-
-
-
-// Dark Mode Toggle
-darkModeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
-  updateMode();
-});
-
-function updateMode() {
-  darkModeToggle.textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌓 Dark Mode";
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
+  try {
+    const result = await handleApiRequest('/api/tasks', 'POST', taskData);
+    if (result.success) {
+      showPopup('Task saved to server ✅');
+      removeFromPending(taskData.name);
+    }
+  } catch (err) {
+    console.warn('Background save failed:', err.message);
+    showPopup('Saved locally, will sync later.', 'error');
   }
-  updateMode();
 
-
-  // Hide the empty state if tasks are available
-  const emptyState = document.getElementById("emptyState");
-  const tasks = document.querySelectorAll(".task-item");
-  emptyState.style.display = tasks.length > 0 ? "none" : "flex";
+  document.getElementById('taskForm').reset();
+  document.getElementById('taskModal').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
 });
 
-// Check tasks length to toggle empty state visibility
-const emptyState = document.getElementById("emptyState");
-const tasks = document.querySelectorAll(".task-item");
-emptyState.style.display = tasks.length > 0 ? "none" : "flex";
+function queuePendingTask(task) {
+  const tasks = JSON.parse(sessionStorage.getItem('pendingTasks') || '[]');
+  tasks.push(task);
+  sessionStorage.setItem('pendingTasks', JSON.stringify(tasks));
+}
 
-
-
-// Toggle visibility of share buttons based on checkbox
-const shareToggle = document.getElementById('shareTask');
-const shareButtons = document.getElementById('shareButtons');
-
-shareToggle?.addEventListener('change', () => {
-  if (shareToggle.checked) {
-    shareButtons.style.display = 'flex'; // or 'block' if you want vertical
+function removeFromPending(taskName) {
+  const tasks = JSON.parse(sessionStorage.getItem('pendingTasks') || '[]');
+  const filtered = tasks.filter(t => t.name !== taskName);
+  if (filtered.length) {
+    sessionStorage.setItem('pendingTasks', JSON.stringify(filtered));
   } else {
-    shareButtons.style.display = 'none';
+    sessionStorage.removeItem('pendingTasks');
   }
-});
-
-// SHARE FUNCTIONALITY
-
-const shareMailBtn = document.getElementById('shareMail');
-const shareWhatsAppBtn = document.getElementById('shareWhatsApp');
-const shareFacebookBtn = document.getElementById('shareFacebook');
-
-// Helper: Get current form values
-function getTaskDataFromForm() {
-  return {
-    name: document.getElementById("taskName").value,
-    priority: document.getElementById("taskPriority").value,
-    schedule: document.getElementById("taskSchedule").value,
-    description: document.getElementById("taskDesc").value,
-  };
 }
 
-// Helper: Format message
-function generateShareableText(taskData) {
-  return `Check out this task!\n\nName: ${taskData.name}\nPriority: ${taskData.priority}\nSchedule: ${taskData.schedule || "Not Scheduled"}\nDescription: ${taskData.description}`;
+async function syncPendingTasks() {
+  const raw = sessionStorage.getItem('pendingTasks');
+  if (!raw) return;
+
+  const tasks = JSON.parse(raw);
+  const remaining = [];
+
+  for (const task of tasks) {
+    try {
+      const res = await handleApiRequest('/api/tasks', 'POST', task);
+      if (!res.success) remaining.push(task);
+    } catch {
+      remaining.push(task);
+    }
+  }
+
+  if (remaining.length) {
+    sessionStorage.setItem('pendingTasks', JSON.stringify(remaining));
+  } else {
+    sessionStorage.removeItem('pendingTasks');
+  }
 }
 
-// Email share
-shareMailBtn?.addEventListener('click', () => {
-  const task = getTaskDataFromForm();
-  const subject = `Task: ${task.name}`;
-  const body = generateShareableText(task);
-  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-});
+// Renders task card to UI
+function renderTask(task) {
+  const card = document.createElement('div');
+  card.className = 'task-card';
+  if (task._id) card.dataset.id = task._id;
 
-// WhatsApp share
-shareWhatsAppBtn?.addEventListener('click', () => {
-  const task = getTaskDataFromForm();
-  const text = generateShareableText(task);
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-});
+  card.innerHTML = `
+    <div class="task-header">
+      <div class="task-name">${task.name}</div>
+      <span class="task-priority">${task.priority || 'normal'}</span>
+    </div>
+    <div class="task-meta">
+      <span>📅 ${task.schedule || 'No date'}</span>
+      <span>📝 ${task.description || 'No description'}</span>
+    </div>
+    <div class="task-actions">
+      <button class="edit-btn">🖋 Edit</button>
+      <button class="danger delete-btn">🗑 Delete</button>
+    </div>
+  `;
 
-// Facebook share
-shareFacebookBtn?.addEventListener('click', () => {
-  const task = getTaskDataFromForm();
-  const text = generateShareableText(task);
-  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://yourwebsite.com')}&quote=${encodeURIComponent(text)}`;
-  window.open(url, '_blank');
-});
+  card.querySelector('.delete-btn').addEventListener('click', () => deleteTask(card));
+  card.querySelector('.edit-btn').addEventListener('click', () => editTask(card, task));
+  document.getElementById('taskList').appendChild(card);
+}
 
+async function deleteTask(card) {
+  const id = card.dataset.id;
 
-  </script>
+  if (!id) {
+    card.remove(); // Probably local-only task
+    return removeFromPending(card.querySelector('.task-name').textContent.trim());
+  }
+
+  try {
+    await handleApiRequest(`/api/tasks/${id}`, 'DELETE');
+    card.remove();
+    showPopup('Task deleted ✅');
+  } catch (err) {
+    showPopup('Failed to delete task', 'error');
+  }
+}
+
+function editTask(card, task) {
+  const modal = document.getElementById('taskModal');
+  const overlay = document.getElementById('overlay');
+  const saveBtn = document.getElementById('saveTask');
+
+  document.getElementById('taskName').value = task.name;
+  document.getElementById('taskDate').value = task.schedule?.slice(0, 16) || '';
+  document.getElementById('taskDesc').value = task.description;
+
+  modal.classList.add('active');
+  overlay.classList.add('active');
+
+  const newBtn = saveBtn.cloneNode(true);
+  saveBtn.parentNode.replaceChild(newBtn, saveBtn);
+
+  newBtn.addEventListener('click', async () => {
+    const updatedTask = {
+      name: document.getElementById('taskName').value.trim(),
+      schedule: document.getElementById('taskDate').value,
+      description: document.getElementById('taskDesc').value.trim()
+    };
+
+    try {
+      const res = await handleApiRequest(`/api/tasks/${task._id}`, 'PUT', updatedTask);
+      card.remove();
+      renderTask({ ...task, ...updatedTask });
+      modal.classList.remove('active');
+      overlay.classList.remove('active');
+      showPopup('Task updated ✅');
+    } catch (err) {
+      showPopup('Update failed', 'error');
+    }
+  });
+}
+
+  // 🌗 Theme toggle
+  const toggleBtn = document.getElementById('themeToggle');
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  });
+
+  // ☰ Sidebar toggle
+  const menuToggle = document.getElementById('menuToggle');
+  const sideMenu = document.getElementById('sideMenu');
+  const overlay = document.getElementById('overlay');
+  const addTaskBtn = document.getElementById('addTask');
+  const taskModal = document.getElementById('taskModal');
+  const taskList = document.getElementById('taskList');
+
+  menuToggle.addEventListener('click', () => {
+    sideMenu.classList.toggle('open');
+    overlay.classList.toggle('active');
+  });
+
+  overlay.addEventListener('click', () => {
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('active');
+    taskModal.classList.remove('active');
+  });
+
+  addTaskBtn.addEventListener('click', () => {
+    taskModal.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+</script>
+
+  
 </body>
 </html>

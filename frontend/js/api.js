@@ -16,13 +16,17 @@ function showPopup(message, type = 'success') {
 
 async function handleApiRequest(endpoint, method = 'GET', data = null) {
     try {
-        const options = {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: data ? JSON.stringify(data) : undefined,
-        };
+        const token = localStorage.getItem('authToken'); // Save token on login
+
+const options = {
+  method,
+  headers: {
+    'Content-Type': 'application/json',
+    ...(token && { Authorization: `Bearer ${token}` })
+  },
+  body: data ? JSON.stringify(data) : undefined
+};
+
 
         const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, options);
         const result = await response.json();
@@ -37,35 +41,44 @@ async function handleApiRequest(endpoint, method = 'GET', data = null) {
 }
 
 async function handleFormSubmit(event, endpoint) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const form = event.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+  const form = event.target;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
 
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.textContent;
 
-    try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
 
-        const result = await handleApiRequest(endpoint, "POST", data);
-        showPopup(`Success: ${result.message || 'Operation completed successfully'}`);
+    const result = await handleApiRequest(endpoint, "POST", data);
 
-        submitBtn.textContent = 'Submitted';
-
-        if (result.redirectUrl) {
-            setTimeout(() => window.location.href = result.redirectUrl, 1500);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showPopup(`Error: ${error.message || 'An error occurred'}`, 'error');
-        submitBtn.textContent = originalBtnText;
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
-        }
-    }
+    // ✅ Store token if it's returned
+    if (result.token) {
+  localStorage.setItem('authToken', result.token);
+  localStorage.setItem('user', JSON.stringify(result.user)); // optional
 }
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+console.log(user.username);
+
+    showPopup(`Success: ${result.message || 'Operation completed successfully'}`);
+    submitBtn.textContent = 'Submitted';
+
+    if (result.redirectUrl) {
+      setTimeout(() => (window.location.href = result.redirectUrl), 1500);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showPopup(`Error: ${error.message || 'An error occurred'}`, 'error');
+    submitBtn.textContent = originalBtnText;
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  }
+}
+

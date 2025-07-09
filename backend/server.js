@@ -69,7 +69,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./docs/*.js'],
+  apis: ['./docs/*.js','./routes/*.js'], // Path to the API docs
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -86,6 +86,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use("/api/signup/data",authRoutes)
 server.use('/api/admin', adminRoutes);
 server.use("/api/data",dataRoutes)
+server.use("/api/tasks", require("./routes/task.routes"));
 // Add this at the END of your middleware chain
 server.use((err, req, res, next) => {
   console.error(err.stack);
