@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc")
 const connectDB = require("./config/db");
 /* const User = require("./models/User");
 const Admin = require("./models/admin");
@@ -49,7 +51,34 @@ server.use((req, res, next) => {
     }
     next();
 })
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Snappod API',
+    version: '1.0.0',
+    description: 'Fullstack CRUD App API Documentation',
+  },
+  servers: [
+    {
+      url: process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5000'
+        : 'https://simple-crud-application-0w9e.onrender.com'
+    }
+  ],
+};
 
+const options = {
+  swaggerDefinition,
+  apis: ['./docs/*.js'],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+server.get("/api/status", (req, res) => {
+  res.json({ success: true, env: process.env.NODE_ENV });
+});
 //Routes
 
 server.use(express.json());
