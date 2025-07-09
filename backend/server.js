@@ -23,18 +23,18 @@ const navigation = [];
 
 const allowedOrigins =
   process.env.NODE_ENV === "development"
-    ? ["http://localhost:5000", "http://127.0.0.1:5000",'http://127.0.0.2:5500']
+    ? ["http://localhost:5000", "http://127.0.0.1:5000", "http://127.0.0.2:5500"]
     : ["https://snappod.netlify.app"];
 
-const server = express();
 server.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // 👈 important!
     credentials: true
   })
 );
+
 server.use((req, res, next) => {
     res.apiSuccess = (data, message = "Success", options = {}) => {
     const response = { success: true, message, data };
