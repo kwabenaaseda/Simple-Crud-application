@@ -39,7 +39,7 @@ exports.adminSignup = async (req, res) => {
         email: admin.email,
         role: admin.role
       },
-      redirectUrl: "/homepage"
+      redirectUrl: "/pages/admin/homepage"
     });
   } catch (error) {
     console.error('Admin signup error:', error);
@@ -93,7 +93,7 @@ exports.adminLogin = async (req, res) => {
         email: admin.email,
         role: admin.role
       },
-      redirectUrl: "/homepage"
+      redirectUrl: "/pages/admin/homepage"
     });
   } catch (error) {
     console.error('Admin login error:', error);

@@ -192,6 +192,21 @@
     </style>
 </head>
 <body>
+        <script src="../../js/env.js"></script>
+    <script src="../../js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
     <!-- Animated Gradient Background -->
     <div class="gradient-bg"></div>
 
@@ -203,7 +218,7 @@
         </a>
         
         <div class="nav-controls">
-                        <button class="theme-toggle" ><a href="/">🏠</a></button>
+                        <button class="theme-toggle" ><a data-route="home">🏠</a></button>
             <button class="theme-toggle" id="themeToggle">🌑</button>
         </div>
     </header>
@@ -212,11 +227,11 @@
         <div class="glass-card" style="width: 100%; padding: 2rem;">
             <h2 class="section-title">Administrator Portal</h2>
             <div class="auth-links">
-                <a href="./adminsignup" class="auth-link admin-link">
+                <a data-route="adminSignup" class="auth-link admin-link">
                     <i class="fas fa-sign-in-alt"></i>
                     Admin Signup
                 </a>
-                <a href="./adminlogin" class="auth-link admin-link">
+                <a data-route="adminLogin" class="auth-link admin-link">
                     <i class="fas fa-sign-in-alt"></i>
                     Admin Login
                 </a>

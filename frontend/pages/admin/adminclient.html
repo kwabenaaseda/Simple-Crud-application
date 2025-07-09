@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Management | Snap Pod</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .data-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.75rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .nav-menu {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+        #logout{
+                display: flex;
+                flex-direction: column;
+                border:1px solid;
+                height: max-content;
+                padding: 2em;
+                border-radius: 15px;
+                background-color: white;
+                border-color: white;
+                box-shadow: 1px 1px 5px 2px wheat;
+                line-height: 2em;
+                justify-content: space-around;
+                text-align: center;
+                gap: 1em;
+                
+            }
+            #logout div{
+                display: flex;
+                justify-content: space-around;
+            }
+            #logout button{
+                width: 40%;
+                padding: 0.8em;
+                border-radius: 15px;
+                border: none;
+                background-color: bisque;
+                font-size: larger;
+                font-family: monospace;
+                font-weight: bolder;
+                cursor: pointer;
+            }
+            .options.show{
+                display: flex;
+                border: 1px solid;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100dvh;
+                align-items: center;
+                justify-content: center;
+                width: 100dvw;
+                background-color: #2125299a;
+            }
+            .options{
+                display: none;
+            }
+            .urgent {
+              color: red;
+            }
+    </style>
+</head>
+<body>
+        <script src="../../js/env.js"></script>
+    <script src="../../js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
+    <header>
+        <h2>Application Administrators</h2>
+    </header>
+    
+    <div class="container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>EMAIL</th>
+                </tr>
+            </thead>
+            <tbody id="adminTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="nav-menu">
+        <a data-route="adminDashboard" title="User Management">👥</a>
+        <a data-route="history" title="App History">📜</a>
+        <a data-route="home" title="Logout">🚪</a>
+    </div>
+<div class="options" id="log">
+        <div id="logout">
+            <h2>Do you wish to <em class="urgent">Log Out ?</em></h2>
+            <div>
+                <button id="undo">NO</button>
+                <button class="urgent" id="quit">YES</button>
+            </div> 
+        </div>
+        <script>
+    document.querySelector(`[data-route="home"]`).addEventListener("click",(e)=>{
+        e.preventDefault()
+        
+        document.querySelector(".options").classList.add("show")
+        document.querySelector("#undo").addEventListener("click",()=>{
+        document.querySelector("#undo").textContent="Returning ..."
+        document.querySelector("#quit").disabled = true;
+        document.querySelector("#undo").disabled = true;
+        setTimeout(() => {
+            document.querySelector("#undo").textContent="Done"
+            setTimeout(() => {
+                document.querySelector(".options").classList.remove("show")
+                setTimeout(() => {
+                    document.querySelector("#quit").disabled = false;
+        document.querySelector("#undo").disabled = false;
+         document.querySelector("#undo").textContent = "NO"
+                }, 1000);
+            }, 1300);
+           
+        }, 1500);
+    })
+    document.querySelector("#quit").addEventListener("click",()=>{
+        document.querySelector("#quit").textContent="Signing out ...";
+        document.querySelector("#undo").disabled = true;
+        document.querySelector("#quit").disabled = true;
+        setTimeout(() => {
+            document.querySelector("#quit").textContent="Done"
+            setTimeout(() => {
+                document.querySelector(".options").classList.remove("show")
+                setTimeout(() => {
+                    document.querySelector("#quit").disabled = false;
+        document.querySelector("#undo").disabled = false;
+         document.querySelector("#quit").textContent = "YES";
+         window.location.href="#"
+                }, 1000)
+               
+            }, 1300);
+            
+        }, 1500);
+    })
+
+
+    })
+    
+</script>
+    <script src="../../js/adminclient.js"></script>
+</body>
+</html>

@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Signup | Task Manager</title>
+    <title>Admin Login | Task Manager</title>
     <style>
-        /* [Same CSS as signup.html - can be moved to external CSS file] */
         :root {
             --primary: #7209b7;
             --primary-dark: #560bad;
@@ -156,7 +155,7 @@
         }
         .home {
             position: fixed;
-             top: 1rem;
+            top: 1rem;
             left: 1rem;
             background: white;
             border: none;
@@ -205,42 +204,26 @@
         body.dark-mode .auth-footer {
             color: #aaa;
         }
-/* Add to your existing CSS */
-.popup-success {
-    background: #4CAF50;
-    color: white;
-}
-
-.popup-error {
-    background: #F44336;
-    color: white;
-}
-
-.popup-info {
-    background: #2196F3;
-    color: white;
-}
-
-.fade-out {
-    animation: fadeOut 0.3s ease-in forwards;
-}
-
-@keyframes fadeOut {
-    to { opacity: 0; }
-}
-
-.close-btn {
-    float: right;
-    cursor: pointer;
-    font-weight: bold;
-    margin-left: 15px;
-}
-
     </style>
 </head>
 <body>
+        <script src="../../js/env.js"></script>
+    <script src="../../js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
     <button class="theme-toggle" id="themeToggle">🌙</button>
-    <button class="home"><a href="./portal" title="Home">🏡</a></button>
+    <button class="home"><a data-route="adminPortal" title="Home">🏡</a></button>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -248,28 +231,22 @@
             <p>Restricted access</p>
         </div>
 
-         <form class="auth-form">
+        <form class="auth-form">
             <div class="form-group">
-                <label for="Username">Username</label>
-                <input type="text" id="Username" name="name" class="form-control" placeholder="Enter your name" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="Usermail">Email</label>
-                <input type="email" id="Usermail" name="email" class="form-control" placeholder="your@email.com" required>
+                <label for="mail">Admin Email</label>
+                <input type="email" id="mail" name="email" class="form-control" placeholder="admin@example.com" required>
             </div>
 
             <div class="form-group">
-                <label for="Userpass">Password</label>
-                <input type="password" id="Userpass" name="password" class="form-control" placeholder="At least 8 characters" required minlength="8">
+                <label for="password">Admin Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter admin password" required minlength="8">
             </div>
 
-            <button type="submit" class="btn">Sign Up</button>
+            <button type="submit" class="btn">Admin Login</button>
         </form>
 
         <div class="auth-footer">
-            <p><a href="login.html">Back to user login</a></p>
+            <p>Not Registered? <a data-route="adminSignup">Sign up</a></p>
         </div>
     </div>
 
@@ -308,11 +285,13 @@
             }, 2000);
         }
     </script>
-    <script src="/js/api.js"></script>
+    <script src="../../js/api.js"></script>
 <script>
-document.querySelector('.auth-form').addEventListener('submit',  (e) => {
-    handleFormSubmit(e, '/api/admin/signup');
+
+ document.querySelector('.auth-form').addEventListener('submit',  (e) => {
+    handleFormSubmit(e, '/api/admin/login');
 });
+</script>
 </script>
 </body>
 </html>

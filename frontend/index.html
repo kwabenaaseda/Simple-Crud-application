@@ -30,6 +30,10 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
+        a{
+            text-decoration: none;
+            color: white;
+        }
 
         /* Gradient background animation */
         .gradient-bg {
@@ -546,8 +550,25 @@ body.dark .secondary-button:hover {
  
         }
     </style>
+    
 </head>
 <body>
+    <script src="./js/env.js"></script>
+    <script src="./js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
+    
     <!-- Animated Gradient Background -->
     <div class="gradient-bg"></div>
 
@@ -570,7 +591,7 @@ body.dark .secondary-button:hover {
     <div style="display: flex; align-items: center; gap: 1rem;">
         <button class="theme-toggle" id="themeToggle">🌑</button>
         <button class="cta-button">
-            <a href="./portal">Get Started
+            <a data-route ="userPortal">Get Started
             <i class="fas fa-arrow-right"></i></a>
         </button>
     </div>
@@ -716,10 +737,12 @@ body.dark .secondary-button:hover {
     <section class="cta-section" id="contact">
         <h2>Ready to Transform Your Productivity?</h2>
         <p>Join thousands of users who are achieving more while staying connected with their communities.</p>
-        <button class="cta-button" style="background: white; color: var(--primary);">
+        <a data-route="userPortal">
+            <button class="cta-button" style="background: white; color: var(--primary);" data-route="userPortal>
             <i class="fas fa-user-plus"></i>
             Sign Up Free
         </button>
+        </a>
     </section>
 
     <!-- Footer -->
@@ -774,8 +797,9 @@ body.dark .secondary-button:hover {
             <p>&copy; 2023 Snappod. All rights reserved.</p>
         </div>
     </footer>
-
+   
     <script>
+
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
@@ -796,7 +820,8 @@ body.dark .secondary-button:hover {
             });
         });
     </script>
-    <script>
+    
+<script>
     // Header scroll effect
     window.addEventListener('scroll', function() {
         const header = document.getElementById('header');

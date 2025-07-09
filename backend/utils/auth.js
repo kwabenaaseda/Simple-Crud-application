@@ -57,4 +57,21 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { generateToken, protect };
+const verify = (req, res, next) => {
+    res.apiSuccess = (data, message = "Success", options = {}) => {
+    const response = { success: true, message, data };
+    if (options.redirectUrl) {
+      response.redirectUrl = options.redirectUrl;
+    }
+    res.json(response);
+  };
+    res.apiError = (message, statusCode = 400 ) => {
+      res.status(statusCode).json({
+        success: false,
+        message
+      })
+    }
+    next();
+}
+
+module.exports = { generateToken, protect , verify };

@@ -44,7 +44,7 @@ exports.signup = async (req, res) => {
         username: user.username,
         email: user.email
       },
-      redirectUrl: "/user"
+      redirectUrl: "/pages/user/user"
     });
     
   } catch (error) {
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
         username: user.username,
         email: user.email
       },
-      redirectUrl: "/user"
+      redirectUrl: "/pages/user/user"
     });
   } catch (error) {
     console.error('Login error:', error);

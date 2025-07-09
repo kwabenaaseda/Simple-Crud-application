@@ -538,7 +538,7 @@ min-width: 20px;
   <!-- Header -->
   <header class="header">
     <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle Menu">☰</button>
-    <h1 class="app-title">StackTasks</h1>
+    <h1 class="app-title">Snappod Tasks</h1>
     <div class="header-image">
         <button type="button" class="icon-btn" id="messageBtn" title="Messages">💬</button>
         <button type="button" class="icon-btn" id="userBtn" title="User">AB</button>
@@ -790,13 +790,7 @@ taskForm.addEventListener("submit", (e) => {
     share,
     collab: collaborate
   };
-
-  // Store it in localStorage by the task count
-  let taskCount = localStorage.getItem('taskCount');
-  taskCount = taskCount ? parseInt(taskCount) : 0; // Initialize task count if it's null
-  localStorage.setItem(`task-${taskCount}`, JSON.stringify(taskData)); // Store the task data
-  localStorage.setItem('taskCount', taskCount + 1); // Increment the task count
-  deleteBtn.className= UpdateBtn.className= CompletedBtn.className=`task-${taskCount}`
+// fetch and api calls here
 
   // Close modal
   taskModal.style.display = "none";
@@ -815,8 +809,7 @@ function Delete(event) {
   // Remove from DOM
   taskDiv.remove();
 
-  // Remove from localStorage
-  localStorage.removeItem(taskClass);
+ 
 
   // Update empty state visibility
   const tasks = document.querySelectorAll(".task-item");
@@ -827,18 +820,7 @@ function Delete(event) {
 function Update(event) {
   const taskDiv = event.target.closest('.task-item');
   const taskClass = event.target.className;
-  const taskData = JSON.parse(localStorage.getItem(taskClass));
-
-  if (!taskData) return;
-
-  // Prefill form with existing task data
-  document.getElementById("taskName").value = taskData.name;
-  document.getElementById("taskPriority").value = taskData.priority;
-  document.getElementById("taskSchedule").value = taskData.schedule;
-  document.getElementById("taskDesc").value = taskData.description;
-  document.getElementById("shareTask").checked = taskData.share;
-  document.getElementById("collaborateTask").checked = taskData.collab;
-  
+ 
   const headerTask = document.getElementById("HeaderTask")
   const SubmitTask = document.getElementById("Submit Task")
 
@@ -863,8 +845,7 @@ function Update(event) {
       collab: document.getElementById("collaborateTask").checked
     };
 
-    // Save to localStorage    
-    localStorage.setItem(taskClass, JSON.stringify(updatedData));
+    //api calls for updates here
 
     // Re-render the task
     taskDiv.innerHTML = `
@@ -972,31 +953,7 @@ function toggleSideMenu() {
   overlay.classList.toggle("active");
 }
 
-// Sidebar Navigation
-document.getElementById("ongoingTasksLink").addEventListener("click", () => {
-  window.location.href = "../../pages/user/homepage.html";
-  toggleSideMenu();
-});
 
-document.getElementById("scheduledTasksLink").addEventListener("click", () => {
-  window.location.href = "../../pages/user/schedule.html";
-  toggleSideMenu();
-});
-
-document.getElementById("previousTasksLink").addEventListener("click", () => {
-  window.location.href = "../../pages/user/previous.html";
-  toggleSideMenu();
-});
-
-document.getElementById("ProfileLink").addEventListener("click", () => {
-  window.location.href = "../../pages/admin/admin.html";
-  toggleSideMenu();
-});
-
-document.getElementById("SettingsLink").addEventListener("click", () => {
-  window.location.href = "../../pages/admin/settings.html";
-  toggleSideMenu();
-});
 
 // Dark Mode Toggle
 darkModeToggle.addEventListener("click", () => {
@@ -1015,96 +972,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   updateMode();
 
-  // Load tasks from localStorage on page load
-  const taskCount = localStorage.getItem('taskCount') || 0;
-  for (let i = 0; i < taskCount; i++) {
-    const taskData = JSON.parse(localStorage.getItem(`task-${i}`));
-   
-    
-    if (taskData) {
-      console.log(taskData.name)
-      if (taskData.name === "") {
-        localStorage.removeItem(`task-${i}`);
-        taskDiv.remove(); // Make sure this refers to the actual task DOM element
-        location.reload(); // This alone reloads the page
-        return;
-      }
-      
-      const task = document.createElement("div");
-      task.classList.add("task-item");
-      task.innerHTML = `
-        <strong>${taskData.name}</strong><br>
-       <article>
-        <span>Priority: ${taskData.priority}</span><br>
-        <span>Schedule: ${taskData.schedule || "Not Scheduled"}</span><br>
-        <span>Description: ${taskData.description}</span></article>
-        <br>
-        ${taskData.share ? "🔗 Shared" : ""} ${taskData.collab ? "🤝 Collaboration" : ""}
-      `;
-      
-
-      const urgent = document.createElement("div");
-      const priorityIcons = {
-        low: "../../image/green.png",
-        medium: "../../image/yellow.png",
-        high: "../../image/red.png",
-        undetermined: "../../image/black.png"
-      };
-
-      urgent.innerHTML = `<img src="${priorityIcons[taskData.priority]}" class="flames" alt="flame" id="f-Active" />`;
-      task.appendChild(urgent);
-      // Delete, update and Completed buttons
-      const deleteBtn = document.createElement("button");
-      deleteBtn.value="delete";
-      deleteBtn.id="deleteBtn";
-      deleteBtn.addEventListener("click",Delete)
-      const UpdateBtn = document.createElement("button");
-      UpdateBtn.value="update";
-      UpdateBtn.id="updateBtn";
-      UpdateBtn.addEventListener("click",Update)
-      const CompletedBtn = document.createElement("button");
-      CompletedBtn.value="complete";
-      CompletedBtn.id="completeBtn";
-      CompletedBtn.addEventListener("click",Complete)
-      const DisplayBtn = document.createElement("button");
-     DisplayBtn.value="Display";
-      DisplayBtn.id="DisplayBtn";
-      DisplayBtn.addEventListener("click",Display)
-      DisplayBtn.className= deleteBtn.className= UpdateBtn.className= CompletedBtn.className=`task-${i}`
-      deleteBtn.textContent="🗑"
-      UpdateBtn.textContent="🖋"
-      CompletedBtn.textContent="✅"
-      DisplayBtn.textContent="👁"
-      //Function Calls
-      CompletedBtn.addEventListener("click",()=>{
-        if (CompletedBtn.textContent==="✅"){
-          CompletedBtn.textContent="✔"
-        }else if (CompletedBtn.textContent==="✔"){
-          CompletedBtn.textContent="✅"
-        }
-      })
-     
-      //Functions
-
-      const ContainerFunction=document.createElement("div");
-      ContainerFunction.className="function"
-      ContainerFunction.appendChild(CompletedBtn)
-      ContainerFunction.appendChild(UpdateBtn)
-      ContainerFunction.appendChild(deleteBtn)
-      ContainerFunction.appendChild(DisplayBtn)
-      ContainerFunction.style.border="none"
-
-      task.appendChild(ContainerFunction)
-
-
-      main.appendChild(task);
-      console.log(deleteBtn.className)
-      
-  
-    }
-  }
-
-
 
   // Hide the empty state if tasks are available
   const emptyState = document.getElementById("emptyState");
@@ -1117,12 +984,6 @@ const emptyState = document.getElementById("emptyState");
 const tasks = document.querySelectorAll(".task-item");
 emptyState.style.display = tasks.length > 0 ? "none" : "flex";
 
-setTimeout(() => {
-  if (localStorage.getItem("reloadAgain") === "true") {
-    localStorage.removeItem("reloadAgain");
-    location.reload(); // Second reload
-  }
-}, 1); // delay in milliseconds (500ms = 0.5s, you can adjust as needed)
 
 
 // Toggle visibility of share buttons based on checkbox
@@ -1180,45 +1041,6 @@ shareFacebookBtn?.addEventListener('click', () => {
   const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://yourwebsite.com')}&quote=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 });
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('../../service-worker.js')
-    .then(reg => console.log('Service Worker registered:', reg))
-    .catch(err => console.error('Service Worker registration failed:', err));
-}
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('../../service-worker.js').then(registration => {
-    console.log('Service Worker registered with scope:', registration.scope);
-
-    // Listen for updates
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // New version ready
-          showUpdateBanner();
-        }
-      });
-    });
-  });
-}
-
-// Simple update banner
-function showUpdateBanner() {
-  const banner = document.createElement('div');
-  banner.innerText = 'New version available. Click to refresh!';
-  banner.style.position = 'fixed';
-  banner.style.bottom = '0';
-  banner.style.left = '0';
-  banner.style.right = '0';
-  banner.style.background = '#222';
-  banner.style.color = '#fff';
-  banner.style.padding = '15px';
-  banner.style.textAlign = 'center';
-  banner.style.zIndex = '10000';
-  banner.style.cursor = 'pointer';
-  banner.onclick = () => window.location.reload(true);
-  document.body.appendChild(banner);
-}
 
 
   </script>

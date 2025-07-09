@@ -207,8 +207,23 @@
     </style>
 </head>
 <body>
+        <script src="../../js/env.js"></script>
+    <script src="../../js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
     <button class="theme-toggle" id="themeToggle">🌙</button>
-    <button class="home"><a href="./portal" title="Home">🏡</a></button>
+    <button class="home"><a data-route="userPortal" title="Home">🏡</a></button>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -237,7 +252,7 @@
         </form>
 
         <div class="auth-footer">
-            <p>Already have an account? <a href="login.html">Log in</a></p>
+            <p>Already have an account? <a data-route="userLogin">Log in</a></p>
         </div>
     </div>
     
@@ -276,7 +291,7 @@
             }, 2000);
         }
     </script>
-    <script src="/js/api.js"></script>
+    <script src="../../js/api.js"></script>
 <script>
 document.querySelector('.auth-form').addEventListener('submit', (e) => {
     handleFormSubmit(e, '/api/signup/data');

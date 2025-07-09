@@ -250,10 +250,77 @@
                 bottom: 1rem;
                 right: 1rem;
             }
+            /* Logout section */
+            
+           
         }
+        #logout{
+                display: flex;
+                flex-direction: column;
+                border:1px solid;
+                height: max-content;
+                padding: 2em;
+                border-radius: 15px;
+                background-color: white;
+                border-color: white;
+                box-shadow: 1px 1px 5px 2px wheat;
+                line-height: 2em;
+                justify-content: space-around;
+                text-align: center;
+                gap: 1em;
+                
+            }
+            #logout div{
+                display: flex;
+                justify-content: space-around;
+            }
+            #logout button{
+                width: 40%;
+                padding: 0.8em;
+                border-radius: 15px;
+                border: none;
+                background-color: bisque;
+                font-size: larger;
+                font-family: monospace;
+                font-weight: bolder;
+                cursor: pointer;
+            }
+            .options.show{
+                display: flex;
+                border: 1px solid;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100dvh;
+                align-items: center;
+                justify-content: center;
+                width: 100dvw;
+                background-color: #2125299a;
+            }
+            .options{
+                display: none;
+            }
+            .urgent {
+              color: red;
+            }
     </style>
 </head>
 <body>
+        <script src="./js/env.js"></script>
+    <script src="./js/routes.js"></script>
+     <script>
+        window.addEventListener("DOMContentLoaded",()=>{
+            for (const [key,path] of Object.entries(ROUTES)){
+                const el = document.querySelector(`[data-route = "${key}"]`);
+                if (el){
+                    el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT
+                }
+                if (CONFIG.IS_DEV){
+                    console.log("Environment: DEV 🚀");
+                }
+            }
+        })
+    </script>
     <header>
         <h2>Application Users</h2>
     </header>
@@ -345,15 +412,68 @@
             </form>
         </div>
     </div>
-
-    <div class="nav-menu">
-        <a href="adminclient.html" title="Admin Management">🛠️</a>
-        <a href="history.html" title="App History">📜</a>
-        <a href="/" title="Logout">🚪</a>
+    <div class="options" id="log">
+        <div id="logout">
+            <h2>Do you wish to <em class="urgent">Log Out ?</em></h2>
+            <div>
+                <button id="undo">NO</button>
+                <button class="urgent" id="quit">YES</button>
+            </div> 
+        </div>
     </div>
+    <div class="nav-menu">
+        <a data-route="activeAdmins" title="Admin Management">🛠️</a>
+        <a data-route="history" title="App History">📜</a>
+        <a data-route="home" title="Logout">🚪</a>
+    </div>
+<script>
+    document.querySelector(`[data-route="home"]`).addEventListener("click",(e)=>{
+        e.preventDefault()
+        
+        document.querySelector(".options").classList.add("show")
+        document.querySelector("#undo").addEventListener("click",()=>{
+        document.querySelector("#undo").textContent="Returning ..."
+        document.querySelector("#quit").disabled = true;
+        document.querySelector("#undo").disabled = true;
+        setTimeout(() => {
+            document.querySelector("#undo").textContent="Done"
+            setTimeout(() => {
+                document.querySelector(".options").classList.remove("show")
+                setTimeout(() => {
+                    document.querySelector("#quit").disabled = false;
+        document.querySelector("#undo").disabled = false;
+         document.querySelector("#undo").textContent = "NO"
+                }, 1000);
+            }, 1300);
+           
+        }, 1500);
+    })
+    document.querySelector("#quit").addEventListener("click",()=>{
+        document.querySelector("#quit").textContent="Signing out ...";
+        document.querySelector("#undo").disabled = true;
+        document.querySelector("#quit").disabled = true;
+        setTimeout(() => {
+            document.querySelector("#quit").textContent="Done"
+            setTimeout(() => {
+                document.querySelector(".options").classList.remove("show")
+                setTimeout(() => {
+                    document.querySelector("#quit").disabled = false;
+        document.querySelector("#undo").disabled = false;
+         document.querySelector("#quit").textContent = "YES";
+         window.location.href="#"
+                }, 1000)
+               
+            }, 1300);
+            
+        }, 1500);
+    })
 
-    <script src="./js/index.js"></script>
-    <script src="/js/api.js"></script>
+
+    })
+    
+</script>
+<script src="../../js/env.js"></script>
+    <script src="../../js/routes.js"></script>
 <script>
 // For register user form
 document.querySelector('.auth-form-send').addEventListener('submit', (e) => {

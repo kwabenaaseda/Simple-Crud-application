@@ -1,79 +1,71 @@
-const API_BASE_URL = 'https://simple-crud-application-0w9e.onrender.com';
+// scripts/api.js
 
 function showPopup(message, type = 'success') {
     const popup = document.createElement('div');
     popup.className = `alert popup-${type}`;
-    popup.innerHTML= `${message} <span class="close-popup">&times;</span>`;
+    popup.innerHTML = `${message} <span class="close-popup">&times;</span>`;
     document.body.appendChild(popup);
 
     setTimeout(() => {
         popup.classList.add('fade-out');
-        setTimeout(() => {
-            popup.remove();
-        }, 300);
+        setTimeout(() => popup.remove(), 300);
     }, 5000);
 
-    popup.querySelector('.close-popup').addEventListener('click', () => {
-        popup.remove();
-    });
-
+    popup.querySelector('.close-popup').addEventListener('click', () => popup.remove());
 }
 
 async function handleApiRequest(endpoint, method = 'GET', data = null) {
-    try{
+    try {
         const options = {
             method,
             headers: {
                 'Content-Type': 'application/json',
             },
             body: data ? JSON.stringify(data) : undefined,
-            
         };
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+
+        const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, options);
         const result = await response.json();
 
-        if(!response.ok || !result.success) {
+        if (!response.ok || !result.success) {
             throw new Error(result.message || 'Request failed');
         }
         return result;
-    }
-    catch (error){
+    } catch (error) {
         throw error;
     }
 }
+
 async function handleFormSubmit(event, endpoint) {
     event.preventDefault();
-    
+
     const form = event.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
+
     try {
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.textContent; // Store original button text
-        submitBtn.disabled = true; // Disable the submit button to prevent multiple submissions
-        submitBtn.textContent = 'Submitting...'; // Change button text to indicate submission
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
 
+        const result = await handleApiRequest(endpoint, "POST", data);
+        showPopup(`Success: ${result.message || 'Operation completed successfully'}`);
 
-        const result = await handleApiRequest(endpoint, method = "POST",data);
-        showPopup(`Success: ${result.message || 'Operation completed successfully'} successfully!`);
-        submitBtn.textContent = 'Submitted'; // Change button text to indicate success
-        
+        submitBtn.textContent = 'Submitted';
+
         if (result.redirectUrl) {
-          setTimeout(() => {
-              window.location.href = result.redirectUrl;},1500);
+            setTimeout(() => window.location.href = result.redirectUrl, 1500);
         }
     } catch (error) {
         console.error('Error:', error);
-        // Show error message to user
         showPopup(`Error: ${error.message || 'An error occurred'}`, 'error');
-        submitBtn.textContent = originalBtnText; // Reset button text
-    }
-    finally{
-        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.textContent = originalBtnText;
+    } finally {
         if (submitBtn) {
-            submitBtn.disabled = false; // Re-enable the submit button
-            submitBtn.textContent = originalBtnText; // Reset button text
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
         }
     }
 }
