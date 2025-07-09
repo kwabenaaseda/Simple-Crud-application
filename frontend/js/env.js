@@ -10,6 +10,6 @@ const CONFIG = {
   // Optional: API base URL
   API_BASE: IS_DEV
     ? "http://localhost:5000"
-    : "https://simple-crud-application-0w9e.onrender.com/"
+    : "https://simple-crud-application-0w9e.onrender.com"
 };
 /** This is the environment detection center and it checks to see whether we are in development or in production */
