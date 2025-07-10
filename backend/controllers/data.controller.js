@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const Profile = require("../models/Profile")
+const Task = require("../models/task")
 const Admin = require("../models/admin");
 const Feedback = require("../models/feedback");
 const Activity = require("../models/activity");
@@ -102,6 +104,8 @@ exports.adminDelete =  async (req, res) => {
   try {
     const { id } = req.body;
     await User.findByIdAndDelete(id)
+    await Task.findByIdAndDelete(id)
+    await Profile.findByIdAndDelete(id)
     if(!User){
         return res.apiError("User not found", 404);
     }
@@ -158,37 +162,58 @@ exports.getallAdmins =  async (req, res) => {
     res.apiError("Error retrieving User", 500);
   }
 };
-exports.feedback =  async(req, res) => {
-  try{
-    const Feedback = await Feedback.find();
-    res.apiSuccess(Feedback, "Feedback retrieved successfully");
-  }catch (error) {
-    console.error("Error retrieving Feedback:", error);
-    res.apiError("Error retrieving Feedback", 500);
-  }
-};
-exports.addFeedback =  async (req, res) => {
+// POST /api/data/feedback
+/**
+ * @desc    Add user feedback
+ * @route   POST /api/data/feedback
+ * @access  Private (User)
+ */
+exports.addFeedback = async (req, res) => {
   try {
-    // Find the user in the database (using Mongoose)
-    const user = await User.findOne({ mail: req.body.mail });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    const { feedback } = req.body;
+    const user = req.user; // from protect middleware
+    const userLocation = req.headers.referer || req.originalUrl;
+
+    if (!feedback || typeof feedback !== 'string') {
+      return res.apiError('Feedback content is required', 400);
     }
 
-    // Create and save feedback
-    const feedbackData = new Feedback({
-      user: req.body.mail,
-      feedback: req.body.content,
-      userLocation: req.url,
-      userid: user._id, // Store the user's MongoDB ID
+    const feedbackData = await Feedback.create({
+      user: user.email,
+      feedback,
+      userLocation,
+      userid: user._id,
     });
 
-    await feedbackData.save();
+    res.apiSuccess(feedbackData, 'Feedback submitted successfully');
+     await Activity.create({
+        message: `User ${user.email} sent feedback succesfully`,
+        timestamp: getTimeStamp(),
+    })
+  } catch (error) {
+    console.error('❌ Feedback submission error:', error);
+    res.apiError('Error saving feedback', 500);
+    await Activity.create({
+        message: `User ${user.email} sent feedback unsuccesfully`,
+        timestamp: getTimeStamp(),
+    })
+  }
+};
 
-    // Redirect back to the previous page
-    res.redirect("back"); // or res.redirect(req.headers.referer || '/');
-  } catch (err) {
-    console.error("Feedback submission error:", err);
-    res.status(500).send("router Error");
+/**
+ * @desc    Get all feedback entries
+ * @route   GET /api/data/feedback
+ * @access  Private (Admin/User)
+ */
+exports.getFeedback = async (req, res) => {
+  try {
+    const feedbackList = await Feedback.find()
+      .populate('userid', 'username email')
+      .sort({ createdAt: -1 });
+
+    res.apiSuccess(feedbackList, 'Feedback retrieved successfully');
+  } catch (error) {
+    console.error('❌ Feedback retrieval error:', error);
+    res.apiError('Error retrieving feedback', 500);
   }
 };

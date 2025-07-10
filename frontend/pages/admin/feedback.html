@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback Panel | Snap Pod</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border-radius: 8px;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7ff;
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    header {
+      background: white;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    h2 {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .feedback-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .feedback-table thead {
+      background: var(--primary);
+      color: white;
+    }
+
+    .feedback-table th, .feedback-table td {
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .feedback-table td {
+      border-bottom: 1px solid #eee;
+    }
+
+    .feedback-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .timestamp {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .nav-menu {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.75rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+    }
+
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-menu a:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+
+    .alert {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f72585;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      z-index: 999;
+    }
+
+    .popup-success { background: #4cc9f0; }
+    .popup-error { background: #f72585; }
+
+    .fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(20px); }
+    }
+
+    @media (max-width: 768px) {
+      .feedback-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .nav-menu {
+        bottom: 1rem;
+        right: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script src="../../js/env.js"></script>
+  <script src="../../js/routes.js"></script>
+
+  <header>
+    <h2>User Feedback Dashboard</h2>
+  </header>
+
+  <div class="container">
+    <table class="feedback-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Location</th>
+          <th>Feedback</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="feedbackTableBody">
+        <tr><td colspan="5">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nav-menu">
+    <a data-route="adminDashboard" title="User Management">👥</a>
+    <a data-route="history" title="App History">📜</a>
+    <a data-route="home" title="Logout">🚪</a>
+  </div>
+
+  <script src="../../js/api.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      for (const [key, path] of Object.entries(ROUTES)) {
+        const el = document.querySelector(`[data-route="${key}"]`);
+        if (el) el.href = CONFIG.BASE_PATH + path + CONFIG.FILE_EXT;
+      }
+      loadFeedback();
+    });
+
+    async function loadFeedback() {
+      const tbody = document.getElementById('feedbackTableBody');
+      tbody.innerHTML = `<tr><td colspan="5">Fetching feedback...</td></tr>`;
+
+      try {
+        const result = await handleApiRequest("/api/data/feedback", "GET");
+        if (!result.data || result.data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5">No feedback yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        result.data.forEach(entry => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${entry.userid?.username || "Anonymous"}</td>
+            <td>${entry.userid?.email || entry.user}</td>
+            <td>${entry.userLocation}</td>
+            <td>${entry.feedback}</td>
+            <td class="timestamp">${new Date(entry.createdAt).toLocaleString()}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error(err);
+        showPopup("Failed to load feedback", "error");
+        tbody.innerHTML = `<tr><td colspan="5">Error fetching data.</td></tr>`;
+      }
+    }
+  </script>
+</body>
+</html>

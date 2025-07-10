@@ -88,6 +88,10 @@ server.use("/api/signup/data",authRoutes)
 server.use('/api/admin', adminRoutes);
 server.use("/api/data",dataRoutes)
 server.use("/api/tasks", require("./routes/task.routes"));
+server.use("/api/feedback", require("./routes/feedback.routes"));
+server.use('/api/help', require('./routes/help.routes'));
+
+
 // Add this at the END of your middleware chain
 server.use((err, req, res, next) => {
   console.error(err.stack);
