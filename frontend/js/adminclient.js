@@ -8,10 +8,10 @@ fetch('https://simple-crud-application-0w9e.onrender.com/api/data/admin', {
     const admins = data.data; // <- this is the actual array
     const tbody= document.querySelector("#adminTableBody");
     admins.forEach(user => {
-        const row = `<tr id="${user.id}">
-        <td class="id">${user.id}</td>
+        const row = `<tr id="${user._id}">
+        <td class="id">${user._id}</td>
         <td class="name">${user.name}</td>
-        <td class="email">${user.mail}</td>
+        <td class="email">${user.email}</td>
         </tr>`
         tbody.innerHTML+= row
     });
