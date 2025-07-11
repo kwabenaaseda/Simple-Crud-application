@@ -59,7 +59,7 @@ async function handleFormSubmit(event, endpoint) {
     // ✅ Store token if it's returned
     if (result.token) {
   localStorage.setItem('authToken', result.token);
-  localStorage.setItem('user', JSON.stringify(result.user)); // optional
+/*   localStorage.setItem('user', JSON.stringify(result.user)); */ // optional
 }
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 console.log(user.username);
