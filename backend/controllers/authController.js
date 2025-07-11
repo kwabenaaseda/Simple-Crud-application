@@ -1,15 +1,14 @@
-// controllers/authController.js
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Activity = require('../models/activity');
 const { sendWelcomeEmail } = require('../utils/emailService');
 const { generateToken } = require('../utils/auth');
+const { notifyAll } = require('../utils/notify');
 
 exports.signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    
-    // Check if user exists
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -17,26 +16,26 @@ exports.signup = async (req, res) => {
         message: 'User already exists'
       });
     }
-    
-    // Create user
-    const user = await User.create({
-      username,
-      email,
-      password
-    });
-    
-    // Create profile
+
+    const user = await User.create({ username, email, password });
     await Profile.create({ user: user._id });
-    
-    // Log activity
+
     await Activity.create({
       message: `User ${username} signed up successfully`,
       user: user._id
     });
-    
-    // Generate token
+
     const token = generateToken(user._id);
-    await sendWelcomeEmail(user.email,user.username)
+    await sendWelcomeEmail(user.email, user.username);
+
+    const userCount = await User.countDocuments();
+
+    await notifyAll({
+      subject: '👤 New User Signup',
+      message: `A new user has signed up.\nName: ${user.username}\nTotal Users: ${await User.countDocuments()}`
+
+    });
+
     res.status(201).json({
       success: true,
       token,
@@ -47,7 +46,7 @@ exports.signup = async (req, res) => {
       },
       redirectUrl: "/pages/user/user"
     });
-    
+
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({
@@ -57,22 +56,18 @@ exports.signup = async (req, res) => {
   }
 };
 
-// controllers/authController.js
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    // Find user by email
+
     const user = await User.findOne({ email }).select('+password');
-    
     if (!user) {
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
       });
     }
-    
-    // Check password
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({
@@ -80,16 +75,19 @@ exports.login = async (req, res) => {
         message: 'Invalid credentials'
       });
     }
-    
-    // Generate token
+
     const token = generateToken(user._id);
-    
-    // Log activity
+
     await Activity.create({
       message: `User ${user.username} logged in`,
       user: user._id
     });
-    
+
+    await notifyAll({
+      subject: '✅ User Login',
+      message: `User ${user.username} just logged in`
+    });
+
     res.json({
       success: true,
       token,
@@ -100,6 +98,7 @@ exports.login = async (req, res) => {
       },
       redirectUrl: "/pages/user/user"
     });
+
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({

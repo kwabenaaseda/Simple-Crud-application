@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     targetForm.classList.toggle("hidden");
     
   }
+overlay.addEventListener('click', () => {
+  overlay.classList.remove('active');
+  feedbackForm.classList.add('hidden');
+  helpdeskForm.classList.add('hidden');
+});
 
   feedbackBtn.addEventListener("click", () => toggleForm(feedbackForm));
   helpdeskBtn.addEventListener("click", () => toggleForm(helpdeskForm));
@@ -30,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await handleApiRequest("/api/data/feedback", "POST", {
         feedback,
         userLocation: window.location.href,
-        user: "anonymous"
       });
       showPopup("Thanks for your feedback!");
       feedbackTextarea.value = "";

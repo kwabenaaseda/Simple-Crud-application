@@ -4,6 +4,8 @@ const Task = require("../models/task")
 const Admin = require("../models/admin");
 const Feedback = require("../models/feedback");
 const Activity = require("../models/activity");
+const sendEmail = require("../utils/mailer");
+const { notifyAll } = require('../utils/notify');
 
 const getTimeStamp = () => {
   const time = new Date();
@@ -61,6 +63,11 @@ exports.AdminUpdate =  async (req, res) => {
       message: `User at index: ${user.name} is Updated Successfully!!`,
       timestamp: getTimeStamp(),
     });
+    await notifyAll({
+  subject: '✏️ User Updated',
+  message: `User "${user.email}" was updated by Admin`
+});
+
     res.apiSuccess(
       { userId: user._id, userData: user },
       "User updated successfully",
@@ -79,10 +86,10 @@ exports.AdminUpdate =  async (req, res) => {
 exports.userDelete =  async (req, res) => {
   try {
     const { id } = req.body;
-    await User.findByIdAndDelete(id)
-    if(!User){
-        return res.apiError("User not found", 404);
-    }
+     await Task.findByIdAndDelete(id)
+    await Profile.findByIdAndDelete(id)
+    const deleted = await User.findByIdAndDelete(id);
+if (!deleted) return res.apiError("User not found", 404);
     await Activity.create({
         message: `User ${req.body.name} at index ${id} is Deleted Successfully!!`,
         timestamp: getTimeStamp(),
@@ -103,16 +110,20 @@ exports.userDelete =  async (req, res) => {
 exports.adminDelete =  async (req, res) => {
   try {
     const { id } = req.body;
-    await User.findByIdAndDelete(id)
     await Task.findByIdAndDelete(id)
     await Profile.findByIdAndDelete(id)
-    if(!User){
-        return res.apiError("User not found", 404);
-    }
+    const deleted = await User.findByIdAndDelete(id);
+if (!deleted) return res.apiError("User not found", 404);
+
     await Activity.create({
         message: `User ${req.body.name} at index ${id} is Deleted Successfully!!`,
         timestamp: getTimeStamp(),
     })
+    await notifyAll({
+  subject: '❌ User Deleted',
+  message: `User "${req.body.name}" was deleted`
+});
+
     res.apiSuccess(
       { userId: id },
       "User deleted successfully",
@@ -190,6 +201,27 @@ exports.addFeedback = async (req, res) => {
         message: `User ${user.email} sent feedback succesfully`,
         timestamp: getTimeStamp(),
     })
+    const admins = await Admin.find({}, "email"); // just get emails
+const adminEmails = admins.map(a => a.email).join(",");
+
+await sendEmail({
+  to: adminEmails,
+  subject: "📩 New Feedback Submitted",
+  html: `
+    <h2>New Feedback Received</h2>
+    <p><strong>User:</strong> ${user.email}</p>
+    <p><strong>Feedback:</strong> ${feedback}</p>
+    <p><strong>Page:</strong> ${userLocation}</p>
+    <small>Snappod Admin Panel</small>
+  `
+});
+await notifyAll({
+  subject: '📩 New Feedback Received',
+  message: `Feedback submitted by ${user.email}:\n"${feedback}"`
+});
+
+if (!adminEmails) console.warn("No admin emails found to notify.");
+
   } catch (error) {
     console.error('❌ Feedback submission error:', error);
     res.apiError('Error saving feedback', 500);
