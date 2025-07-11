@@ -2,6 +2,7 @@
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Activity = require('../models/activity');
+const { sendWelcomeEmail } = require('../utils/emailService');
 const { generateToken } = require('../utils/auth');
 
 exports.signup = async (req, res) => {
@@ -35,7 +36,7 @@ exports.signup = async (req, res) => {
     
     // Generate token
     const token = generateToken(user._id);
-    
+    await sendWelcomeEmail(user.email,user.name)
     res.status(201).json({
       success: true,
       token,
