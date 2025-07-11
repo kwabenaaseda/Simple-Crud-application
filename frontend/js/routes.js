@@ -9,6 +9,7 @@ const ROUTES ={
     adminSignup:'pages/auth/adminsignup',
     adminDashboard:'pages/admin/homepage',
     history:'pages/admin/history',
+    feedback:'pages/admin/feedback',
     activeAdmins:'pages/admin/adminclient',
     userDashboard:'pages/user/user',
 }
