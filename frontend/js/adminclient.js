@@ -10,8 +10,8 @@ fetch('https://simple-crud-application-0w9e.onrender.com/api/data/admin', {
     admins.forEach(user => {
         const row = `<tr id="${user.id}">
         <td class="id">${user.id}</td>
-        <td class="name">${user.adminData.name}</td>
-        <td class="email">${user.adminData.mail}</td>
+        <td class="name">${user.name}</td>
+        <td class="email">${user.mail}</td>
         </tr>`
         tbody.innerHTML+= row
     });
