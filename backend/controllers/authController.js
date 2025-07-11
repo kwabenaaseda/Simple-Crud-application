@@ -36,7 +36,7 @@ exports.signup = async (req, res) => {
     
     // Generate token
     const token = generateToken(user._id);
-    await sendWelcomeEmail(user.email,user.name)
+    await sendWelcomeEmail(user.email,user.username)
     res.status(201).json({
       success: true,
       token,
