@@ -61,8 +61,8 @@ async function handleFormSubmit(event, endpoint) {
   localStorage.setItem('authToken', result.token);
 /*   localStorage.setItem('user', JSON.stringify(result.user)); */ // optional
 }
-const user = JSON.parse(localStorage.getItem('user') || '{}');
-console.log(user.username);
+/* const user = JSON.parse(localStorage.getItem('user') || '{}');
+console.log(user.username); */
 
     showPopup(`Success: ${result.message || 'Operation completed successfully'}`);
     submitBtn.textContent = 'Submitted';
