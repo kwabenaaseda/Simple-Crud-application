@@ -5,8 +5,9 @@ fetch('https://simple-crud-application-0w9e.onrender.com/api/data/admin', {
 })
 .then(res => res.json())
 .then(data =>{
+    const admins = data.data; // <- this is the actual array
     const tbody= document.querySelector("#adminTableBody");
-    data.forEach(user => {
+    admins.forEach(user => {
         const row = `<tr id="${user.id}">
         <td class="id">${user.id}</td>
         <td class="name">${user.adminData.name}</td>

@@ -5,8 +5,9 @@ fetch('https://simple-crud-application-0w9e.onrender.com/api/data/history', {
 })
 .then(res => res.json())
 .then(data =>{
+    const history = data.data; // <- this is the actual array
     const tbody= document.querySelector("#historyTableBody");
-    data.forEach(user => {
+    history.forEach(user => {
         const row = `<tr id="${user.id}">
         <td class="id">${user.message}</td>
         <td class="name">${user.timestamp}</td>
