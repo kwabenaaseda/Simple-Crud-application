@@ -13,23 +13,29 @@ fetch('https://simple-crud-application-0w9e.onrender.com/api/data/users', {
         'Content-Type': 'application/json'}
 })
 .then(res => res.json())
-.then(data =>{
-    const tbody= document.querySelector("#userTable tbody");
-    data.forEach(user => {
-        const row = `<tr id="${user.id}">
-        <td class="id">${user.id}</td>
-        <td class="name">${user.userData.name}</td>
-        <td class="age">${user.userData.age}</td>
-        <td class="mail">${user.userData.mail}</td>
-        <td class="password">${user.userData.password}</td>
-        <td><button id="update" class="${user.id}" onclick="Update(this)">update</button><button id="delete" class="${user.id}" onclick="Delete(this)">delete</button><button id="viewUser">View</button></td>
-        </tr>`
-        tbody.innerHTML+= row
+.then(result => {
+    const users = result.data; // <- this is the actual array
+    const tbody = document.querySelector("#userTable tbody");
+
+    users.forEach(user => {
+        const row = `
+        <tr id="${user._id}">
+            <td class="id">${user._id}</td>
+            <td class="name">${user.username}</td>
+            <td class="age">${user.age || '-'}</td>
+            <td class="mail">${user.email}</td>
+            <td>
+                <button id="update" class="${user._id}" onclick="Update(this)">update</button>
+                <button id="delete" class="${user._id}" onclick="Delete(this)">delete</button>
+                <button id="viewUser">View</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
     });
 })
-.catch(error=>{
-    console.log(`Error:${error}`)
-})
+.catch(error => {
+    console.error("Fetch error:", error);
+});
 
 document.querySelector("#toggle").addEventListener("click",()=>{
     document.querySelector(".addUser").classList.toggle("active")
