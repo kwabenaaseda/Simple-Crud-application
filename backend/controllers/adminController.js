@@ -1,5 +1,6 @@
 const Admin = require('../models/admin');
 const Activity = require('../models/activity');
+const { sendWelcomeEmail } = require('../utils/emailService');
 const { generateToken } = require('../utils/auth');
 
 exports.adminSignup = async (req, res) => {
@@ -27,7 +28,7 @@ exports.adminSignup = async (req, res) => {
       message: `Admin ${name} signed up`,
       admin: admin._id
     });
-    
+    sendWelcomeEmail(admin.email, admin.name);
     const token = generateToken(admin._id, 'admin');
     
     res.status(201).json({
