@@ -32,7 +32,7 @@ overlay.addEventListener('click', () => {
     if (!feedback) return showPopup("Feedback can't be empty", "error");
 
     try {
-      const result = await handleApiRequest("/api/data/feedback", "POST", {
+     await handleApiRequest("/api/data/feedback", "POST", {
         feedback,
         userLocation: window.location.href,
       });
@@ -53,29 +53,51 @@ overlay.addEventListener('click', () => {
   });
 
   // Make buttons draggable
- /*  makeDraggable(feedbackBtn);
-  makeDraggable(helpdeskBtn); */
+  makeDraggable(feedbackBtn);
+  makeDraggable(helpdeskBtn);
 });
 
 // Utility to make any element draggable
-/* function makeDraggable(el) {
+function makeDraggable(el) {
   let offsetX = 0, offsetY = 0, isDragging = false;
 
   el.addEventListener("mousedown", e => {
     isDragging = true;
     offsetX = e.clientX - el.offsetLeft;
     offsetY = e.clientY - el.offsetTop;
-    el.style.position = 'fixed';
+    el.style.position = 'absolute';
     el.style.zIndex = 1000;
   });
 
   document.addEventListener("mousemove", e => {
     if (!isDragging) return;
-    el.style.left = `${e.clientX - offsetX}px`;
-    el.style.top = `${e.clientY - offsetY}px`;
+    el.style.left = `${e.clientX}px`;
+    el.style.top = `${e.clientY}px`;
+    el.style.width = 'max-content';
+    el.style.transition='0.4s ease-in-out';
+   /*  el.style.height='40px';
+    el.style.width='15px'; */
+    var checkLeft =el.style.left.split("px")[0];
+    var checkRight =el.style.top.split("px")[0];
+    if(checkLeft>300){
+      el.style.left = `590px`
+    }
+    else{
+      el.style.left = `10px`
+    }
+    if(checkRight>300){
+      el.style.top = `400px`
+    }
+    else{
+      el.style.top = `65px`
+    }
   });
-
+/* >300?550:10
+300?40:10
+*/
   document.addEventListener("mouseup", () => {
     isDragging = false;
+    
+    
   });
-} */
+}

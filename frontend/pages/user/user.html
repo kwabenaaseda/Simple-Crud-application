@@ -330,6 +330,11 @@
                 gap: 1em;
                 
             }
+            body.dark #logout{
+               background-color:var(--dark-glass);
+                border-color: rgb(30, 28, 128);
+                box-shadow: 1px 1px 5px 2px wheat;
+            }
             #logout div{
                 display: flex;
                 justify-content: space-around;
@@ -344,6 +349,9 @@
                 font-family: monospace;
                 font-weight: bolder;
                 cursor: pointer;
+            }
+            #logout button:hover{
+              background-color:rgb(212, 116, 87);
             }
             .options.show{
                 display: flex;
@@ -369,6 +377,8 @@
   position: fixed;
   right: -93px;
   padding: 0.6rem 1rem;
+  width: max-content;
+  height: fit-content;
   border-radius: 50px;
   background: var(--primary);
   color: white;
