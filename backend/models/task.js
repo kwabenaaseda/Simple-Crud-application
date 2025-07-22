@@ -11,7 +11,7 @@ const taskSchema = new mongoose.Schema({
   description: String,
   priority: {
     type: String,
-    enum: ['low', 'medium', 'high', 'undetermined', 'normal'], // ✅ added normal
+    enum: ['low', 'medium', 'high','normal'], // ✅ added normal
     default: 'undetermined',
   },
   schedule: Date,

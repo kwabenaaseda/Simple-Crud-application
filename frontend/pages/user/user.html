@@ -436,7 +436,9 @@
   object-fit: contain;
   margin-bottom: 1rem;
 }
-
+select{
+  margin-bottom: 0.7em;
+}
             
   </style>
 </head>
@@ -487,6 +489,16 @@
     <h2>Add Task</h2>
     <input type="text" id="taskName" placeholder="Task name">
     <input type="datetime-local" id="taskDate">
+      <select name="priority" id="priority">
+        <option value="title">-- Task Priority --</option>
+        <hr>
+        <option value="low">low</option>
+        <option value="medium">medium</option>
+        <option value="high">high</option>
+        <option value="normal">normal</option>
+      </select>
+      
+  
     <textarea id="taskDesc" placeholder="Task description..."></textarea>
     <button id="saveTask">Save Task</button>
   </div>
@@ -552,7 +564,7 @@ document.getElementById('saveTask').addEventListener('click', async () => {
     name: document.getElementById('taskName').value.trim(),
     schedule: document.getElementById('taskDate').value,
     description: document.getElementById('taskDesc').value.trim(),
-    priority: 'normally',
+    priority: document.getElementById("priority").value =="title" ?"normal":document.getElementById("priority").value,
     share: false,
     collab: false
   };
@@ -669,6 +681,7 @@ function editTask(card, task) {
   document.getElementById('taskName').value = task.name;
   document.getElementById('taskDate').value = task.schedule?.slice(0, 16) || '';
   document.getElementById('taskDesc').value = task.description;
+  document.getElementById('priority').value = task.priority;
 
   modal.classList.add('active');
   overlay.classList.add('active');
@@ -680,7 +693,8 @@ function editTask(card, task) {
     const updatedTask = {
       name: document.getElementById('taskName').value.trim(),
       schedule: document.getElementById('taskDate').value,
-      description: document.getElementById('taskDesc').value.trim()
+      description: document.getElementById('taskDesc').value.trim(),
+      priority:document.getElementById("priority").value =="title" ?"normal":document.getElementById("priority").value
     };
 
     try {
