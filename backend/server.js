@@ -114,7 +114,7 @@ server.get('/api/test', (req, res) => {
 });
 
 server.get("/admin", (req,res) => {
-    res.redirect("https://snappod.netlify.app/pages/admin/adminlogin.html");
+    res.redirect("https://snappod.netlify.app/pages/admin/adminindex.html");
 })
 
 server.listen(PORT, () =>
